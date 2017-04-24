@@ -1,6 +1,6 @@
 # JavaScript ES2015
 
-Load the `malc.html` page into your browser and test the functions in your JavaScript console. Or use [node](https://nodejs.org/en/).
+Load the `malc.html` page into your browser and test the functions in your JavaScript console. Or use [node](https://nodejs.org/en/). For the separate FizzBuzz implementation, load `fizzbuzz.html`. Loading both at once seems to cause browser stack death.
 
 ## How to write a recursive function using lambdas in JavaScript
 
@@ -243,10 +243,19 @@ BIND_LIST = BIND(BIND(LIST)(BIND_SQUARE))(BIND_CUBE)
 
 **Factorial**
 
-`FACT = FIX(Y => n => IS_ZERO(n)(ONE)(x => MULT(n)(Y(PRED(n)))(x)))`
+```
+FACT = FIX(Y => n =>
+  IS_ZERO(n)
+    (ONE)
+    (x => MULT(n)(Y(PRED(n)))(x)))
+```
 Return the factorial of `n`.
 
 ```
+F = f => n => IS_ZERO(n)(ONE)(x => MULT(n)(f(PRED(n)))(x))
+
+FACT = FIX(F)
+
 AND_EQUALS_TWO = COMPOSE(AND)(EQUALS(TWO))
 
 ALL_TWOS = FOLD(AND_EQUALS_TWO)(TRUE)
@@ -296,7 +305,14 @@ Expansion of `FACT` into un-abstracted function calls.
 
 **Fibonacci**
 
-`FIB = FIX(Y => n => IS_ZERO(n)(ZERO)(IF_THEN_ELSE(EQUALS(n)(ONE))(ONE)(x => PLUS(Y(MINUS(n)(ONE)))(Y(MINUS(n)(TWO)))(x))))`
+```
+FIB = FIX(Y => n =>
+  IS_ZERO(n)
+    (ZERO)
+    (IF_THEN_ELSE(EQUALS(n)(ONE))
+      (ONE)
+      (x => PLUS(Y(MINUS(n)(ONE)))(Y(MINUS(n)(TWO)))(x))))
+```
 Return the `n`th Fibonacci number after `ZERO`.
 
 ```
@@ -304,6 +320,25 @@ FIB_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n(
 ```
 
 Expansion of `FIB` into un-abstracted function calls.
+
+```
+FIZZBUZZFUNC = MAP(n =>
+  IF_THEN_ELSE(IS_ZERO(MOD(n)(FIFTEEN)))
+    (FIZZBUZZ)
+    (IF_THEN_ELSE(IS_ZERO(MOD(n)(THREE)))
+      (FIZZ)
+      (IF_THEN_ELSE(IS_ZERO(MOD(n)(FIVE)))
+        (BUZZ)
+        (n))))
+```
+Apply the FizzBuzz test to a list of numbers. Long lists are likely to make your browser freeze.
+
+Example:
+```
+LIST = RANGE(ONE)(FIFTEEN)
+FB = FIZZBUZZFUNC(LIST)
+// toFizzBuzz(FB) = [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]
+```
 
 **Utility functions**
 
