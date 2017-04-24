@@ -1,5 +1,7 @@
 # JavaScript ES2015
 
+Arrow functions make this nicer.
+
 Load the `malc.html` page into your browser and test the functions in your JavaScript console. Or use [node](https://nodejs.org/en/). For the separate FizzBuzz implementation, load `fizzbuzz.html`. Loading both at once seems to cause browser stack death.
 
 ## How to write a recursive function using lambdas in JavaScript

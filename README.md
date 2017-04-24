@@ -8,4 +8,4 @@ Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 
 **Implementations**
 
-* [JavaScript](/javascript/README.md)
+* [JavaScript ES2015](/javascript/README.md)
