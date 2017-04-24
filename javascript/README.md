@@ -11,7 +11,7 @@ Load the `malc.html` page into your browser and test the functions in your JavaS
     FACT = n =>
       IS_ZERO(n)
         (ONE)
-       	(MULT(n)(FACT(PRED(n))))
+        (MULT(n)(FACT(PRED(n))))
     ```
 
 2. Wrap the whole thing in `FIX`, add a parameter to the front of the definition, and replace all recursive function calls with that parameter:
