@@ -7,7 +7,7 @@ Load the `malc.html` page into your browser and test the functions in your JavaS
 ## How to write a recursive function using lambdas in JavaScript
 
 1. Write the function as you normally would without a fixpoint combinator:
-    ```
+    ```js
     FACT = n =>
       IS_ZERO(n)
         (ONE)
@@ -15,7 +15,7 @@ Load the `malc.html` page into your browser and test the functions in your JavaS
     ```
 
 2. Wrap the whole thing in `FIX`, add a parameter to the front of the definition, and replace all recursive function calls with that parameter:
-    ```
+    ```js
     FACT = FIX(Y => n =>
       IS_ZERO(n)
         (ONE)
@@ -23,7 +23,7 @@ Load the `malc.html` page into your browser and test the functions in your JavaS
     ```
 
 3. Wrap the recursive branch of your function in a dummy closure by adding a parameter to the front of that branch and applying the last function in that branch to the same parameter:
-    ```
+    ```js
     FACT = FIX(Y => n =>
       IS_ZERO(n)
         (ONE)
@@ -46,7 +46,7 @@ INDEX = FIX(Y => xs => n =>
 
 ## Function documentation
 
-```
+```js
 ID = x => x
 ```
 
@@ -54,7 +54,7 @@ Identity combinator. Returns `x`.
 
 ***
 
-```
+```js
 TRUE = x => y => x
 FALSE = x => y => y
 ```
@@ -63,7 +63,7 @@ Boolean true and false.
 
 ***
 
-```
+```js
 AND = x => y => x(y)(FALSE)
 OR = x => y => x(TRUE)(y)
 NOT = x => x(FALSE)(TRUE)
@@ -74,7 +74,7 @@ Boolean combinators.
 
 ***
 
-```
+```js
 IF_THEN_ELSE = p => x => y => p(x)(y)
 ```
 
@@ -82,7 +82,7 @@ Conditional branching. Note that `IF_THEN_ELSE` is identical in value to `ID`.
 
 ***
 
-```
+```js
 ZERO = f => x => x
 ONE = f => x => f(x)
 TWO = f => x => f(f(x))
@@ -93,7 +93,7 @@ Natural numbers.
 
 ***
 
-```
+```js
 SUCC = n => f => x => f(n(f)(x))
 ```
 
@@ -101,7 +101,7 @@ Given a number, return the following number.
 
 ***
 
-```
+```js
 PRED = n => n(p => z => z(SUCC(p(TRUE)))(p(TRUE)))(z => z(ZERO)(ZERO))(FALSE)
 ```
 
@@ -109,7 +109,7 @@ Given a number, return the preceding number down to `ZERO`.
 
 ***
 
-```
+```js
 PLUS = n => m => m(SUCC)(n)
 ```
 
@@ -117,7 +117,7 @@ Add two numbers.
 
 ***
 
-```
+```js
 MINUS = n => m => m(PRED)(n)
 ```
 
@@ -125,7 +125,7 @@ Subtract one number from another, down to `ZERO`.
 
 ***
 
-```
+```js
 MULT = n => m => m(PLUS(n))(ZERO)
 ```
 
@@ -133,7 +133,7 @@ Multiply two numbers.
 
 ***
 
-```
+```js
 EXP = n => m => m(n)
 ```
 
@@ -141,7 +141,7 @@ Exponentiation. Returns n^m (equivalent to `n**m`).
 
 ***
 
-```
+```js
 IS_ZERO = n => n(m => FALSE)(TRUE)
 ```
 
@@ -149,7 +149,7 @@ Check whether a number is equal to `ZERO`.
 
 ***
 
-```
+```js
 LESS_THAN_OR_EQUAL = n => m => IS_ZERO(MINUS(n)(m))
 LESS_THAN = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(n(PRED)(m))))
 EQUALS = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(LESS_THAN_OR_EQUAL(m)(n))
@@ -161,7 +161,7 @@ General predicates for comparing the ordering of numbers.
 
 ***
 
-```
+```js
 MAX = x => y => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(x)(y))(y)(x)
 MIN = x => y => IF_THEN_ELSE(EQUALS(MAX(x)(y))(x))(y)(x)
 ```
@@ -170,7 +170,7 @@ Return the greater or lesser of two numbers, respectively.
 
 ***
 
-```
+```js
 COMPOSE = f => g => x => f(g(x))
 ```
 
@@ -178,7 +178,7 @@ Function composition.
 
 ***
 
-```
+```js
 FIX = f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y)))
 ```
 
@@ -186,7 +186,7 @@ The fixpoint "Z" combinator, for defining recursive functions (see above).
 
 ***
 
-```
+```js
 MOD = FIX(Y => n => m =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
     (x => Y(MINUS(n)(m))(m)(x))
@@ -197,7 +197,7 @@ Modulus of two numbers.
 	
 ***
 
-```
+```js
 DIV = FIX(Y => n => m =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
     (x => SUCC(Y(MINUS(n)(m))(m))(x))
@@ -208,7 +208,7 @@ Divide two numbers.
 
 ***
 
-```
+```js
 EVEN = n => IS_ZERO(MOD(n)(TWO))
 ODD = COMPOSE(NOT)(EVEN)
 ```
@@ -217,7 +217,7 @@ Check whether a number is even or odd, respectively.
 
 ***
 
-```
+```js
 PAIR = x => y => p => p(x)(y)
 ```
 
@@ -225,7 +225,7 @@ Create a pair (2-tuple) out of two numbers.
 
 ***
 
-```
+```js
 FIRST = p => p(x => y => x)
 SECOND = p => p(x => y => y)
 ```
@@ -234,7 +234,7 @@ First and second projections on a pair. Return the first or second value, respec
 
 ***
 
-```
+```js
 LIST_ELEMENT = x => xs => PAIR(FALSE)(PAIR(x)(xs))
 ```
 
@@ -242,7 +242,7 @@ Prepend an element `x` onto the front of a list `xs`. Use `EMPTY_LIST` for `xs` 
 
 ***
 
-```
+```js
 EMPTY_LIST = PAIR(TRUE)(TRUE)
 ```
 
@@ -250,7 +250,7 @@ The empty list.
 
 ***
 
-```
+```js
 IS_EMPTY = FIRST
 ```
 
@@ -258,7 +258,7 @@ Check whether a list is `EMPTY_LIST`.
 
 ***
 
-```
+```js
 HEAD = xs => FIRST(SECOND(xs))
 ```
 
@@ -266,7 +266,7 @@ Return the first element of a list.
 
 ***
 
-```
+```js
 TAIL = xs => SECOND(SECOND(xs))
 ```
 
@@ -274,7 +274,7 @@ Return the rest of a list after and not including the first element.
 
 ***
 
-```
+```js
 FOLD = FIX(Y => f => z => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (z)
@@ -284,7 +284,7 @@ Fold a binary function `f` with accumulator `z` over a list `xs` and return the 
 
 ***
 
-```
+```js
 MAP = f => FOLD(x => xs => LIST_ELEMENT(f(x))(xs))(EMPTY_LIST)
 ```
 
@@ -292,7 +292,7 @@ Apply a function `f` to every element in a list `xs`.
 
 ***
 
-```
+```js
 FILTER = p => FOLD(x => xs =>
   IF_THEN_ELSE(p(x))
     (LIST_ELEMENT(x)(xs))
@@ -303,7 +303,7 @@ Given a predicate function `p` and list `xs`, return a new list of only those el
 
 ***
 
-```
+```js
 RANGE = FIX(Y => m => n =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
     (x => LIST_ELEMENT(m)(Y(SUCC(m))(n))(x))
@@ -314,7 +314,7 @@ Create a new list within a specified range, i.e. `RANGE(ONE)(TEN)` for a list of
 
 ***
 
-```
+```js
 INDEX = FIX(Y => xs => n =>
   IF_THEN_ELSE(IS_ZERO(n))
     (HEAD(xs))
@@ -325,7 +325,7 @@ Return the value at index `n` of list `xs`.
 
 ***
 
-```
+```js
 PUSH = x => xs => FOLD(LIST_ELEMENT)(LIST_ELEMENT(x)(EMPTY_LIST))(xs)
 ```
 
@@ -333,7 +333,7 @@ Append the value `x` to the end of the list `xs`.
 
 ***
 
-```
+```js
 APPEND = FIX(Y => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (ys)
@@ -344,7 +344,7 @@ Append a list `ys` onto the end of a list `xs`.
 
 ***
 
-```
+```js
 LENGTH = xs => (FIX(Y => xs => n =>
 	IF_THEN_ELSE(IS_EMPTY(xs))
 	  (n)
@@ -356,7 +356,7 @@ Return the length of a list `xs`.
 
 ***
 
-```
+```js
 REVERSE = xs => (FIX(Y => xs => a =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (a)
@@ -368,7 +368,7 @@ Return a list with the elements of a list `xs` in reverse order.
 
 ***
 
-```
+```js
 TAKE = FIX(Y => n => xs =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(n)(ZERO))
 	   (EMPTY_LIST)
@@ -381,20 +381,20 @@ Return a list comprised of the first `n` elements of a list `xs`.
 
 ***
 
-```
+```js
 ZIP = FIX(Y => xs => ys =>
-    IF_THEN_ELSE(IS_EMPTY(xs))
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (IF_THEN_ELSE(IS_EMPTY(ys))
       (EMPTY_LIST)
-      (IF_THEN_ELSE(IS_EMPTY(ys))
-        (EMPTY_LIST)
-        (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
+      (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
 ```
 
 Zip two lists together into a new list of pairs.
 
 ***
 
-```
+```js
 ZIP_WITH = FIX(Y => f => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
@@ -407,7 +407,7 @@ Zip two list together using a custom, binary function.
 
 ***
 
-```
+```js
 INSERT = FIX(Y => n => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
 	   (LIST_ELEMENT(n)(EMPTY_LIST))
@@ -420,7 +420,7 @@ Insert a number `n` into a list of numbers at the first position where it is les
 
 ***
 
-```
+```js
 SORT = FOLD(INSERT)(EMPTY_LIST)
 ```
 
@@ -428,7 +428,7 @@ Sort a list in ascending order.
 
 ***
 
-```
+```js
 ZEROS = FIX(Y => LIST_ELEMENT(ZERO)(Y))
 ```
 
@@ -436,7 +436,7 @@ Return an infinite list in which every element is `ZERO`.
 
 ***
 
-```
+```js
 REPEAT = x => FIX(Y => LIST_ELEMENT(x)(Y))
 ```
 
@@ -446,13 +446,13 @@ Return an infinite list in which every element is `x`.
 
 **Monoid**	
 
-```
+```js
 MEMPTY = EMPTY_LIST
 ```
 
 Identity of lists.
 
-```
+```js
 MAPPEND = APPEND
 ```
 
@@ -462,7 +462,7 @@ Associative operation for lists.
 
 **Functor**
 
-```
+```js
 FMAP = MAP
 ```
 
@@ -472,13 +472,13 @@ Function mapping for lists.
 
 **Applicative**
 
-```
+```js
 PURE = x => LIST_ELEMENT(x)(EMPTY_LIST)
 ```
 
 Identity for applicative list.
 
-```
+```js
 AP = FIX(Y => fs => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
@@ -489,15 +489,16 @@ AP = FIX(Y => fs => xs =>
 Applicative operation for lists. Applies every function in `fs` to every element in `xs` and returns the result in a new list.
 
 Example:
-```
+```js
 LIST = RANGE(ONE)(THREE)
 FUNC_LIST = MAP(PLUS)(LIST)
 AP_LIST = AP(FUNC_LIST)(LIST)
 // toArrayInt(AP_LIST) = [2,3,4,3,4,5,4,5,6]
 ```
 
+***
 
-```
+```js
 AP_ZIP_LIST = fs => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
@@ -508,7 +509,7 @@ AP_ZIP_LIST = fs => xs =>
 Applicative operation for zip lists. Applies each function in `fs` to each parallel element in `xs` and returns the result in a new list.
 
 Example:
-```
+```js
 LIST = RANGE(ONE)(THREE)
 FUNC_LIST = MAP(PLUS)(LIST)
 ZIP_LIST = AP_ZIP_LIST(FUNC_LIST)(REVERSE(LIST))
@@ -519,20 +520,23 @@ ZIP_LIST = AP_ZIP_LIST(FUNC_LIST)(REVERSE(LIST))
 
 **Monad**
 
-```
+```js
 RETURN = PURE
 ```
 
 Identity for monadic list.
 
-```
-BIND = FIX(Y => xs => f => IS_EMPTY(xs)(EMPTY_LIST)(x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))
+```js
+BIND = FIX(Y => xs => f =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))
 ```
 
 Binding operation (or "flat map") for lists.
 
 Example:
-```
+```js
 LIST = RANGE(ONE)(THREE)
 BIND_SQUARE = x => RETURN(EXP(x)(TWO))
 BIND_CUBE = x => RETURN(EXP(x)(THREE))
@@ -544,7 +548,7 @@ BIND_LIST = BIND(BIND(LIST)(BIND_SQUARE))(BIND_CUBE)
 
 **Factorial**
 
-```
+```js
 FACT = FIX(Y => n =>
   IS_ZERO(n)
     (ONE)
@@ -552,7 +556,7 @@ FACT = FIX(Y => n =>
 ```
 Return the factorial of `n`.
 
-```
+```js
 F = f => n => IS_ZERO(n)(ONE)(x => MULT(n)(f(PRED(n)))(x))
 
 FACT = FIX(F)
@@ -606,7 +610,7 @@ Expansion of `FACT` into un-abstracted function calls.
 
 **Fibonacci**
 
-```
+```js
 FIB = FIX(Y => n =>
   IS_ZERO(n)
     (ZERO)
@@ -626,7 +630,7 @@ Expansion of `FIB` into un-abstracted function calls.
 
 _Inspired by Tom Stuart, [Understanding Computation](https://www.amazon.co.uk/gp/product/1449329276/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=1449329276&linkCode=as2&tag=computationclub-21&linkId=Y33MSPW2C4U3YVP5) and [Programming with Nothing](https://speakerdeck.com/tomstuart/programming-with-nothing)_
 
-```
+```js
 FIZZBUZZFUNC = MAP(n =>
   IF_THEN_ELSE(IS_ZERO(MOD(n)(FIFTEEN)))
     (FIZZBUZZ)
@@ -639,7 +643,7 @@ FIZZBUZZFUNC = MAP(n =>
 Apply the FizzBuzz test to a list of numbers. Long lists are likely to make your browser freeze.
 
 Example:
-```
+```js
 LIST = RANGE(ONE)(FIFTEEN)
 FB = FIZZBUZZFUNC(LIST)
 // toFizzBuzz(FB) = [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]
@@ -651,7 +655,7 @@ FB = FIZZBUZZFUNC(LIST)
 
 **Utility functions**
 
-```
+```js
 toBool = b => IF_THEN_ELSE(b)(true)(false)
 ```
 
@@ -659,7 +663,7 @@ Boolean conversion from lambdas to native.
 
 ***
 
-```
+```js
 fromBool = b => b ? TRUE : FALSE
 ```
 
@@ -667,7 +671,7 @@ Boolean conversion from native to lambdas.
 
 ***
 
-```
+```js
 toInt = n => n(x => x + 1)(0)
 ```
 
@@ -675,14 +679,14 @@ Integer conversion from lambdas to native.
 
 ***
 
-```
+```js
 fromInt = n => n == 0 ? f => x => x : f => x => f(fromInt(n - 1)(f)(x))
 ```
 Integer conversion from native to lambdas.
 
 ***
 
-```
+```js
 toArray = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [HEAD(xs)].concat(toArray(TAIL(xs))))
 ```
 
@@ -690,7 +694,7 @@ Array conversion from lambdas to native. Does not convert elements.
 
 ***
 
-```
+```js
 fromArray = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(xs.slice(0,1))(fromArray(xs.slice(1)))
 ```
 
@@ -698,7 +702,7 @@ Array conversion from native to lambdas. Does not convert elements.
 
 ***
 
-```
+```js
 toArrayInt = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [toInt(HEAD(xs))].concat(toArrayInt(TAIL(xs))))
 ```
 
@@ -706,7 +710,7 @@ Convert a list of lambda numbers into a native array of integers.
 
 ***
 
-```
+```js
 fromArrayInt = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(xs.slice(0,1)))(fromArrayInt(xs.slice(1)))
 ```
 
@@ -714,7 +718,7 @@ Convert a native array of integers into a list of lambda numbers.
 
 ***
 
-```
+```js
 toPair = p => {
   return {fst: FIRST(p), snd: SECOND(p)}
 }
@@ -724,7 +728,7 @@ Convert a lambda pair into a native object.
 
 ***
 
-```
+```js
 toPairInt = p => {
   return {fst: (toInt(FIRST(p))), snd: (toInt(SECOND(p)))}
 }
@@ -734,7 +738,7 @@ Convert a pair of lambda numbers into a native object.
 
 ***
 
-```
+```js
 toString = str => toArrayInt(str).map(n => String.fromCharCode(n)).join("")
 ```
 
@@ -742,7 +746,7 @@ Convert a list of lambda numbers into a native string.
 
 ***
 
-```
+```js
 fromString = str => str.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(str.charCodeAt(str.substr(0,1))))(fromString(str.substr(1)))
 ```
 
@@ -750,7 +754,7 @@ Convert a native string into a list of lambda numbers.
 
 ***
 
-```
+```js
 toFizzBuzz = fb => toArray(fb).map(x => toString(x) === "" ? toInt(x) : toString(x))
 ```
 
@@ -758,7 +762,7 @@ Convert the output of `FIZZBUZZFUNC` into a native array.
 
 ***
 
-```
+```js
 toLambda = x => {
   if (Number.isInteger(x)) return fromInt(x)
   if (typeof x === "boolean") return fromBool(x)
@@ -774,7 +778,7 @@ Convert any native object into corresponding lambdas, if possible.
 
 **Tests**
 
-```
+```js
 p = PAIR(ONE)(TWO)
 l = RANGE(ONE)(THREE)
 
