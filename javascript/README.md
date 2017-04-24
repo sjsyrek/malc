@@ -49,16 +49,22 @@ Identity combinator. Returns `x`.
 
 ***
 
-`TRUE = x => y => x`
-`FALSE = x => y => y`
+```
+TRUE = x => y => x
+FALSE = x => y => y
+```
+
 Boolean true and false.
 
 ***
 
-`AND = x => y => x(y)(FALSE)`
-`OR = x => y => x(TRUE)(y)`
-`NOT = x => x(FALSE)(TRUE)`
-`XOR = x => y => NOT(AND(x)(y))`
+```
+AND = x => y => x(y)(FALSE)
+OR = x => y => x(TRUE)(y)
+NOT = x => x(FALSE)(TRUE)
+XOR = x => y => NOT(AND(x)(y))
+```
+
 Boolean combinators.
 
 ***
@@ -68,10 +74,13 @@ Conditional branching. Note that `IF_THEN_ELSE` is identical in value to `ID`.
 
 ***
 
-`ZERO = f => x => x`
-`ONE = f => x => f(x)`
-`TWO = f => x => f(f(x))`
-`THREE = f => x => f(f(f(x))) // etc.`
+```
+ZERO = f => x => x
+ONE = f => x => f(x)
+TWO = f => x => f(f(x))
+THREE = f => x => f(f(f(x))) // etc.
+```
+
 Natural numbers.
 
 ***
@@ -111,17 +120,23 @@ Check whether a number is equal to `ZERO`.
 
 ***
 
-`LESS_THAN_OR_EQUAL = n => m => IS_ZERO(MINUS(n)(m))`
-`LESS_THAN = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(n(PRED)(m))))`
-`EQUALS = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(LESS_THAN_OR_EQUAL(m)(n))`
-`GREATER_THAN_OR_EQUAL = n => m => IS_ZERO(n(PRED)(m))`
-`GREATER_THAN = n => m => AND(GREATER_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(MINUS(n)(m))))`
+```
+LESS_THAN_OR_EQUAL = n => m => IS_ZERO(MINUS(n)(m))
+LESS_THAN = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(n(PRED)(m))))
+EQUALS = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(LESS_THAN_OR_EQUAL(m)(n))
+GREATER_THAN_OR_EQUAL = n => m => IS_ZERO(n(PRED)(m))
+GREATER_THAN = n => m => AND(GREATER_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(MINUS(n)(m))))
+```
+
 General predicates for comparing the ordering of numbers.
 
 ***
 
-`MAX = x => y => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(x)(y))(y)(x)`
-`MIN = x => y => IF_THEN_ELSE(EQUALS(MAX(x)(y))(x))(y)(x)`
+```
+MAX = x => y => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(x)(y))(y)(x)
+MIN = x => y => IF_THEN_ELSE(EQUALS(MAX(x)(y))(x))(y)(x)
+```
+
 Return the greater or lesser of two numbers, respectively.
 
 ***
@@ -158,8 +173,11 @@ Divide two numbers.
 
 ***
 
-`EVEN = n => IS_ZERO(MOD(n)(TWO))`
-`ODD = COMPOSE(NOT)(EVEN)`
+```
+EVEN = n => IS_ZERO(MOD(n)(TWO))
+ODD = COMPOSE(NOT)(EVEN)
+```
+
 Check whether a number is even or odd, respectively.
 
 ***
@@ -169,8 +187,11 @@ Create a pair (2-tuple) out of two numbers.
 
 ***
 
-`FIRST = p => p(x => y => x)`
-`SECOND = p => p(x => y => y)`
+```
+FIRST = p => p(x => y => x)
+SECOND = p => p(x => y => y)
+```
+
 First and second projections on a pair. Return the first or second value, respectively.
 
 ***
