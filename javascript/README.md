@@ -410,10 +410,10 @@ Zip two list together using a custom, binary function.
 ```js
 INSERT = FIX(Y => n => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
-	   (LIST_ELEMENT(n)(EMPTY_LIST))
-	   (IF_THEN_ELSE(GREATER_THAN(n)(HEAD(xs)))
-	     (x => LIST_ELEMENT(HEAD(xs))(Y(n)(TAIL(xs)))(x))
-	     (LIST_ELEMENT(n)(xs))))
+    (LIST_ELEMENT(n)(EMPTY_LIST))
+    (IF_THEN_ELSE(GREATER_THAN(n)(HEAD(xs)))
+      (x => LIST_ELEMENT(HEAD(xs))(Y(n)(TAIL(xs)))(x))
+      (LIST_ELEMENT(n)(xs))))
 ```
 
 Insert a number `n` into a list of numbers at the first position where it is less than or equal to the next number.
