@@ -596,9 +596,7 @@ FACT_CHECK = ALL_TWOS(
 
 Proof that the reduction steps for `FACT` are isomorphic to one another.
 
-```
-FACT_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n(x => x => y => y)(x => y => x))(n)(f => x => f(x))(x => (n => m => m((n => m => m(n => f => x => f(n(f)(x)))(n))(n))(f => x => x))(n)(f((n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n)))(x)))
-```
+`FACT_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n(x => x => y => y)(x => y => x))(n)(f => x => f(x))(x => (n => m => m((n => m => m(n => f => x => f(n(f)(x)))(n))(n))(f => x => x))(n)(f((n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n)))(x)))`
 
 Expansion of `FACT` into un-abstracted function calls.
 
@@ -616,11 +614,15 @@ FIB = FIX(Y => n =>
 ```
 Return the `n`th Fibonacci number after `ZERO`.
 
-```
-FIB_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n(x => (x => y => y))(x => y => x))(n)(f => x => x)((x => x)((n => m => (x => y => x(y)(x => y => y))((n => m => (n => n(x => (x => y => y))(x => y => x))((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(m)))(n)(m))((n => m => (n => n(x => (x => y => y))(x => y => x))((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(m)))(m)(n)))(n)(f => x => f(x)))(f => x => f(x))(x => (n => m => m(n => f => x => f(n(f)(x)))(n))(f((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(f => x => f(x))))(f((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(f => x => f(f(x)))))(x))))
-```
+`FIB_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n(x => (x => y => y))(x => y => x))(n)(f => x => x)((x => x)((n => m => (x => y => x(y)(x => y => y))((n => m => (n => n(x => (x => y => y))(x => y => x))((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(m)))(n)(m))((n => m => (n => n(x => (x => y => y))(x => y => x))((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(m)))(m)(n)))(n)(f => x => f(x)))(f => x => f(x))(x => (n => m => m(n => f => x => f(n(f)(x)))(n))(f((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(f => x => f(x))))(f((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(f => x => f(f(x)))))(x))))`
 
 Expansion of `FIB` into un-abstracted function calls.
+
+***
+
+**FizzBuzz**
+
+_Inspired by Tom Stuart, [Understanding Computation](https://www.amazon.co.uk/gp/product/1449329276/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=1449329276&linkCode=as2&tag=computationclub-21&linkId=Y33MSPW2C4U3YVP5) and [Programming with Nothing](https://speakerdeck.com/tomstuart/programming-with-nothing)_
 
 ```
 FIZZBUZZFUNC = MAP(n =>
