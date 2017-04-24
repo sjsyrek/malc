@@ -44,7 +44,10 @@ INDEX = FIX(Y => xs => n =>
 
 ## Function documentation
 
-`ID = x => x`
+```
+ID = x => x
+```
+
 Identity combinator. Returns `x`.
 
 ***
@@ -69,7 +72,10 @@ Boolean combinators.
 
 ***
 
-`IF_THEN_ELSE = p => x => y => p(x)(y)`
+```
+IF_THEN_ELSE = p => x => y => p(x)(y)
+```
+
 Conditional branching. Note that `IF_THEN_ELSE` is identical in value to `ID`.
 
 ***
@@ -85,37 +91,58 @@ Natural numbers.
 
 ***
 
-`SUCC = n => f => x => f(n(f)(x))`
+```
+SUCC = n => f => x => f(n(f)(x))
+```
+
 Given a number, return the following number.
 
 ***
 
-`PRED = n => n(p => z => z(SUCC(p(TRUE)))(p(TRUE)))(z => z(ZERO)(ZERO))(FALSE)`
+```
+PRED = n => n(p => z => z(SUCC(p(TRUE)))(p(TRUE)))(z => z(ZERO)(ZERO))(FALSE)
+```
+
 Given a number, return the preceding number down to `ZERO`.
 
 ***
 
-`PLUS = n => m => m(SUCC)(n)`
+```
+PLUS = n => m => m(SUCC)(n)
+```
+
 Add two numbers.
 
 ***
 
-`MINUS = n => m => m(PRED)(n)`
+```
+MINUS = n => m => m(PRED)(n)
+```
+
 Subtract one number from another, down to `ZERO`.
 
 ***
 
-`MULT = n => m => m(PLUS(n))(ZERO)`
+```
+MULT = n => m => m(PLUS(n))(ZERO)
+```
+
 Multiply two numbers.
 
 ***
 
-`EXP = n => m => m(n)`
+```
+EXP = n => m => m(n)
+```
+
 Exponentiation. Returns n^m (equivalent to `n**m`).
 
 ***
 
-`IS_ZERO = n => n(m => FALSE)(TRUE)`
+```
+IS_ZERO = n => n(m => FALSE)(TRUE)
+```
+
 Check whether a number is equal to `ZERO`.
 
 ***
@@ -141,12 +168,18 @@ Return the greater or lesser of two numbers, respectively.
 
 ***
 
-`COMPOSE = f => g => x => f(g(x))`
+```
+COMPOSE = f => g => x => f(g(x))
+```
+
 Function composition.
 
 ***
 
-`FIX = f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y)))`
+```
+FIX = f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y)))
+```
+
 The fixpoint "Z" combinator, for defining recursive functions (see above).
 
 ***
@@ -182,7 +215,10 @@ Check whether a number is even or odd, respectively.
 
 ***
 
-`PAIR = x => y => p => p(x)(y)`
+```
+PAIR = x => y => p => p(x)(y)
+```
+
 Create a pair (2-tuple) out of two numbers.
 
 ***
@@ -196,27 +232,42 @@ First and second projections on a pair. Return the first or second value, respec
 
 ***
 
-`LIST_ELEMENT = x => xs => PAIR(FALSE)(PAIR(x)(xs))`
+```
+LIST_ELEMENT = x => xs => PAIR(FALSE)(PAIR(x)(xs))
+```
+
 Prepend an element `x` onto the front of a list `xs`. Use `EMPTY_LIST` for `xs` when creating a new list, i.e. `LIST_ELEMENT(ONE)(LIST_ELEMENT(TWO)(LIST_ELEMENT(THREE)(EMPTY_LIST)))`.
 
 ***
 
-`EMPTY_LIST = PAIR(TRUE)(TRUE)`
+```
+EMPTY_LIST = PAIR(TRUE)(TRUE)
+```
+
 The empty list.
 
 ***
 
-`IS_EMPTY = FIRST`
+```
+IS_EMPTY = FIRST
+```
+
 Check whether a list is `EMPTY_LIST`.
 
 ***
 
-`HEAD = xs => FIRST(SECOND(xs))`
+```
+HEAD = xs => FIRST(SECOND(xs))
+```
+
 Return the first element of a list.
 
 ***
 
-`TAIL = xs => SECOND(SECOND(xs))`
+```
+TAIL = xs => SECOND(SECOND(xs))
+```
+
 Return the rest of a list after and not including the first element.
 
 ***
@@ -269,7 +320,9 @@ Return the value at index `n` of list `xs`.
 
 ***
 
-`PUSH = x => xs => FOLD(LIST_ELEMENT)(LIST_ELEMENT(x)(EMPTY_LIST))(xs)`
+```
+PUSH = x => xs => FOLD(LIST_ELEMENT)(LIST_ELEMENT(x)(EMPTY_LIST))(xs)
+```
 
 ***
 
@@ -362,41 +415,62 @@ Insert a number `n` into a list of numbers at the first position where it is les
 
 ***
 
-`SORT = FOLD(INSERT)(EMPTY_LIST)`
+```
+SORT = FOLD(INSERT)(EMPTY_LIST)
+```
+
 Sort a list in ascending order.
 
 ***
 
-`ZEROS = FIX(Y => LIST_ELEMENT(ZERO)(Y))`
+```
+ZEROS = FIX(Y => LIST_ELEMENT(ZERO)(Y))
+```
+
 Return an infinite list in which every element is `ZERO`.
 
 ***
 
-`REPEAT = x => FIX(Y => LIST_ELEMENT(x)(Y))`
+```
+REPEAT = x => FIX(Y => LIST_ELEMENT(x)(Y))
+```
+
 Return an infinite list in which every element is `x`.
 
 ***
 
 **Monoid**	
 
-`MEMPTY = EMPTY_LIST`
+```
+MEMPTY = EMPTY_LIST
+```
+
 Identity of lists.
 
-`MAPPEND = APPEND`
+```
+MAPPEND = APPEND
+```
+
 Associative operation for lists.
 
 ***
 
 **Functor**
 
-`FMAP = MAP`
+```
+FMAP = MAP
+```
+
 Function mapping for lists.
 
 ***
 
 **Applicative**
 
-`PURE = x => LIST_ELEMENT(x)(EMPTY_LIST)`
+```
+PURE = x => LIST_ELEMENT(x)(EMPTY_LIST)
+```
+
 Identity for applicative list.
 
 ```
@@ -440,10 +514,16 @@ ZIP_LIST = AP_ZIP_LIST(FUNC_LIST)(REVERSE(LIST))
 
 **Monad**
 
-`RETURN = PURE`
+```
+RETURN = PURE
+```
+
 Identity for monadic list.
 
-`BIND = FIX(Y => xs => f => IS_EMPTY(xs)(EMPTY_LIST)(x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))`
+```
+BIND = FIX(Y => xs => f => IS_EMPTY(xs)(EMPTY_LIST)(x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))
+```
+
 Binding operation (or "flat map") for lists.
 
 Example:
@@ -558,29 +638,68 @@ FB = FIZZBUZZFUNC(LIST)
 
 **Utility functions**
 
-`toBool = b => IF_THEN_ELSE(b)(true)(false)`
+```
+toBool = b => IF_THEN_ELSE(b)(true)(false)
+```
+
 Boolean conversion from lambdas to native.
 
-`fromBool = b => b ? TRUE : FALSE`
+***
+
+```
+fromBool = b => b ? TRUE : FALSE
+```
+
 Boolean conversion from native to lambdas.
 
-`toInt = n => n(x => x + 1)(0)`
+***
+
+```
+toInt = n => n(x => x + 1)(0)
+```
+
 Integer conversion from lambdas to native.
 
-`fromInt = n => n == 0 ? f => x => x : f => x => f(fromInt(n - 1)(f)(x))`
+***
+
+```
+fromInt = n => n == 0 ? f => x => x : f => x => f(fromInt(n - 1)(f)(x))
+```
 Integer conversion from native to lambdas.
 
-`toArray = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [HEAD(xs)].concat(toArray(TAIL(xs))))`
+***
+
+```
+toArray = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [HEAD(xs)].concat(toArray(TAIL(xs))))
+```
+
 Array conversion from lambdas to native. Does not convert elements.
 
-`fromArray = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(xs.slice(0,1))(fromArray(xs.slice(1)))`
+***
+
+```
+fromArray = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(xs.slice(0,1))(fromArray(xs.slice(1)))
+```
+
 Array conversion from native to lambdas. Does not convert elements.
 
-`toArrayInt = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [toInt(HEAD(xs))].concat(toArrayInt(TAIL(xs))))`
+***
+
+```
+toArrayInt = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [toInt(HEAD(xs))].concat(toArrayInt(TAIL(xs))))
+```
+
 Convert a list of lambda numbers into a native array of integers.
 
-`fromArrayInt = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(xs.slice(0,1)))(fromArrayInt(xs.slice(1)))`
+***
+
+```
+fromArrayInt = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(xs.slice(0,1)))(fromArrayInt(xs.slice(1)))
+```
+
 Convert a native array of integers into a list of lambda numbers.
+
+***
 
 ```
 toPair = p => {
@@ -590,6 +709,8 @@ toPair = p => {
 
 Convert a lambda pair into a native object.
 
+***
+
 ```
 toPairInt = p => {
   return {fst: (toInt(FIRST(p))), snd: (toInt(SECOND(p)))}
@@ -598,14 +719,31 @@ toPairInt = p => {
 
 Convert a pair of lambda numbers into a native object.
 
-`toString = str => toArrayInt(str).map(n => String.fromCharCode(n)).join("")`
+***
+
+```
+toString = str => toArrayInt(str).map(n => String.fromCharCode(n)).join("")
+```
+
 Convert a list of lambda numbers into a native string.
 
-`fromString = str => str.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(str.charCodeAt(str.substr(0,1))))(fromString(str.substr(1)))`
+***
+
+```
+fromString = str => str.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(str.charCodeAt(str.substr(0,1))))(fromString(str.substr(1)))
+```
+
 Convert a native string into a list of lambda numbers.
 
-`toFizzBuzz = fb => toArray(fb).map(x => toString(x) === "" ? toInt(x) : toString(x))`
+***
+
+```
+toFizzBuzz = fb => toArray(fb).map(x => toString(x) === "" ? toInt(x) : toString(x))
+```
+
 Convert the output of `FIZZBUZZFUNC` into a native array.
+
+***
 
 ```
 toLambda = x => {
@@ -618,6 +756,8 @@ toLambda = x => {
 ```
 
 Convert any native object into corresponding lambdas, if possible.
+
+***
 
 **Tests**
 
