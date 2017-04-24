@@ -538,6 +538,8 @@ BIND_LIST = BIND(BIND(LIST)(BIND_SQUARE))(BIND_CUBE)
 // toArrayInt(BIND_LIST) = [1,64,729]
 ```
 
+***
+
 **Factorial**
 
 ```
@@ -600,6 +602,8 @@ FACT_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n
 
 Expansion of `FACT` into un-abstracted function calls.
 
+***
+
 **Fibonacci**
 
 ```
@@ -638,6 +642,8 @@ FB = FIZZBUZZFUNC(LIST)
 ```
 
 [Expansion](FizzBuzz.md) of `FIZZBUZZFUNC` into un-abstracted function calls.
+
+***
 
 **Utility functions**
 
