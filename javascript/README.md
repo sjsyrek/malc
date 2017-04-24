@@ -47,9 +47,13 @@ INDEX = FIX(Y => xs => n =>
 `ID = x => x`
 Identity combinator. Returns `x`.
 
+***
+
 `TRUE = x => y => x`
 `FALSE = x => y => y`
 Boolean true and false.
+
+***
 
 `AND = x => y => x(y)(FALSE)`
 `OR = x => y => x(TRUE)(y)`
@@ -57,35 +61,55 @@ Boolean true and false.
 `XOR = x => y => NOT(AND(x)(y))`
 Boolean combinators.
 
+***
+
 `IF_THEN_ELSE = p => x => y => p(x)(y)`
 Conditional branching. Note that `IF_THEN_ELSE` is identical in value to `ID`.
+
+***
 
 `ZERO = f => x => x`
 `ONE = f => x => f(x)`
 `TWO = f => x => f(f(x))`
-`THREE = f => x => f(f(f(x)))`
+`THREE = f => x => f(f(f(x))) // etc.`
 Natural numbers.
+
+***
 
 `SUCC = n => f => x => f(n(f)(x))`
 Given a number, return the following number.
 
+***
+
 `PRED = n => n(p => z => z(SUCC(p(TRUE)))(p(TRUE)))(z => z(ZERO)(ZERO))(FALSE)`
 Given a number, return the preceding number down to `ZERO`.
+
+***
 
 `PLUS = n => m => m(SUCC)(n)`
 Add two numbers.
 
+***
+
 `MINUS = n => m => m(PRED)(n)`
 Subtract one number from another, down to `ZERO`.
+
+***
 
 `MULT = n => m => m(PLUS(n))(ZERO)`
 Multiply two numbers.
 
+***
+
 `EXP = n => m => m(n)`
 Exponentiation. Returns n^m (equivalent to `n**m`).
 
+***
+
 `IS_ZERO = n => n(m => FALSE)(TRUE)`
 Check whether a number is equal to `ZERO`.
+
+***
 
 `LESS_THAN_OR_EQUAL = n => m => IS_ZERO(MINUS(n)(m))`
 `LESS_THAN = n => m => AND(LESS_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(n(PRED)(m))))`
@@ -94,95 +118,243 @@ Check whether a number is equal to `ZERO`.
 `GREATER_THAN = n => m => AND(GREATER_THAN_OR_EQUAL(n)(m))(NOT(IS_ZERO(MINUS(n)(m))))`
 General predicates for comparing the ordering of numbers.
 
+***
+
 `MAX = x => y => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(x)(y))(y)(x)`
 `MIN = x => y => IF_THEN_ELSE(EQUALS(MAX(x)(y))(x))(y)(x)`
 Return the greater or lesser of two numbers, respectively.
 
+***
+
 `COMPOSE = f => g => x => f(g(x))`
 Function composition.
+
+***
 
 `FIX = f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y)))`
 The fixpoint "Z" combinator, for defining recursive functions (see above).
 
-`MOD = FIX(Y => n => m => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))(x => Y(MINUS(n)(m))(m)(x))(n))`
-Modulus of two numbers.
+***
 
-`DIV = FIX(Y => n => m => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))(x => SUCC(Y(MINUS(n)(m))(m))(x))(ZERO))`
-Divide two two numbers.
+```
+MOD = FIX(Y => n => m =>
+  IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
+    (x => Y(MINUS(n)(m))(m)(x))
+    (n))
+```
+
+Modulus of two numbers.
+	
+***
+
+```
+DIV = FIX(Y => n => m =>
+  IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
+    (x => SUCC(Y(MINUS(n)(m))(m))(x))
+    (ZERO))
+```
+
+Divide two numbers.
+
+***
 
 `EVEN = n => IS_ZERO(MOD(n)(TWO))`
 `ODD = COMPOSE(NOT)(EVEN)`
 Check whether a number is even or odd, respectively.
 
+***
+
 `PAIR = x => y => p => p(x)(y)`
 Create a pair (2-tuple) out of two numbers.
+
+***
 
 `FIRST = p => p(x => y => x)`
 `SECOND = p => p(x => y => y)`
 First and second projections on a pair. Return the first or second value, respectively.
 
+***
+
 `LIST_ELEMENT = x => xs => PAIR(FALSE)(PAIR(x)(xs))`
 Prepend an element `x` onto the front of a list `xs`. Use `EMPTY_LIST` for `xs` when creating a new list, i.e. `LIST_ELEMENT(ONE)(LIST_ELEMENT(TWO)(LIST_ELEMENT(THREE)(EMPTY_LIST)))`.
+
+***
 
 `EMPTY_LIST = PAIR(TRUE)(TRUE)`
 The empty list.
 
+***
+
 `IS_EMPTY = FIRST`
 Check whether a list is `EMPTY_LIST`.
+
+***
 
 `HEAD = xs => FIRST(SECOND(xs))`
 Return the first element of a list.
 
+***
+
 `TAIL = xs => SECOND(SECOND(xs))`
 Return the rest of a list after and not including the first element.
 
-`FOLD = FIX(Y => f => z => xs => IF_THEN_ELSE(IS_EMPTY(xs))(z)(x => f(HEAD(xs))(Y(f)(z)(TAIL(xs)))(x)))`
+***
+
+```
+FOLD = FIX(Y => f => z => xs =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (z)
+    (x => f(HEAD(xs))(Y(f)(z)(TAIL(xs)))(x)))
+```
 Fold a binary function `f` with accumulator `z` over a list `xs` and return the result.
+
+***
 
 `MAP = f => FOLD(x => xs => LIST_ELEMENT(f(x))(xs))(EMPTY_LIST)`
 Apply a function `f` to every element in a list `xs`.
 
-`FILTER = p => FOLD(x => xs => IF_THEN_ELSE(p(x))(LIST_ELEMENT(x)(xs))(xs))(EMPTY_LIST)`
+***
+
+```
+FILTER = p => FOLD(x => xs =>
+  IF_THEN_ELSE(p(x))
+    (LIST_ELEMENT(x)(xs))
+    (xs))
+   (EMPTY_LIST)
+```
 Given a predicate function `p` and list `xs`, return a new list of only those elements of `xs` for which `p` returns `TRUE`.
 
-`RANGE = FIX(Y => m => n => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))(x => LIST_ELEMENT(m)(Y(SUCC(m))(n))(x))(EMPTY_LIST))`
+***
+
+```
+RANGE = FIX(Y => m => n =>
+  IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
+    (x => LIST_ELEMENT(m)(Y(SUCC(m))(n))(x))
+    (EMPTY_LIST))
+```
+
 Create a new list within a specified range, i.e. `RANGE(ONE)(TEN)` for a list of consecutive values from `ONE` to `TEN`.
 
-`INDEX = FIX(Y => xs => n => IF_THEN_ELSE(IS_ZERO(n))(HEAD(xs))(x => Y(TAIL(xs))(PRED(n))(x)))`
+***
+
+```
+INDEX = FIX(Y => xs => n =>
+  IF_THEN_ELSE(IS_ZERO(n))
+    (HEAD(xs))
+    (x => Y(TAIL(xs))(PRED(n))(x)))
+```
+
 Return the value at index `n` of list `xs`.
 
+***
+
 `PUSH = x => xs => FOLD(LIST_ELEMENT)(LIST_ELEMENT(x)(EMPTY_LIST))(xs)`
+
+***
+
 Append the value `x` to the end of the list `xs`.
 
-`APPEND = FIX(Y => xs => ys => IF_THEN_ELSE(IS_EMPTY(xs))(ys)(x => LIST_ELEMENT(HEAD(xs))(Y(TAIL(xs))(ys))(x)))`
+```
+APPEND = FIX(Y => xs => ys =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (ys)
+    (x => LIST_ELEMENT(HEAD(xs))(Y(TAIL(xs))(ys))(x)))
+```
+
+***
+
 Append a list `ys` onto the end of a list `xs`.
 
-`LENGTH = xs => (FIX(Y => xs => n => IF_THEN_ELSE(IS_EMPTY(xs))(n)(x => Y(TAIL(xs))(SUCC(n))(x))))(xs)(ZERO)`
+```
+LENGTH = xs => (FIX(Y => xs => n =>
+	IF_THEN_ELSE(IS_EMPTY(xs))
+	  (n)
+	  (x => Y(TAIL(xs))(SUCC(n))(x))))
+	  (xs)(ZERO)
+```
+
+***
+
 Return the length of a list `xs`.
 
-`REVERSE = xs => (FIX(Y => xs => a => IF_THEN_ELSE(IS_EMPTY(xs))(a)(x => (Y(TAIL(xs))(LIST_ELEMENT(HEAD(xs))(a)))(x))))(xs)(EMPTY_LIST)`
+```
+REVERSE = xs => (FIX(Y => xs => a =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (a)
+    (x => (Y(TAIL(xs))(LIST_ELEMENT(HEAD(xs))(a)))(x))))
+  (xs)(EMPTY_LIST)
+```
+
+***
+
 Return a list with the elements of a list `xs` in reverse order.
 
-`TAKE = FIX(Y => n => xs => IF_THEN_ELSE(LESS_THAN_OR_EQUAL(n)(ZERO))(EMPTY_LIST)(IF_THEN_ELSE(IS_EMPTY(xs)))(EMPTY_LIST)(x => LIST_ELEMENT(HEAD(xs))(Y(MINUS(n)(ONE))(TAIL(xs)))(x)))`
+```
+TAKE = FIX(Y => n => xs =>
+  IF_THEN_ELSE(LESS_THAN_OR_EQUAL(n)(ZERO))
+	   (EMPTY_LIST)
+	   (IF_THEN_ELSE(IS_EMPTY(xs)))
+	     (EMPTY_LIST)
+	     (x => LIST_ELEMENT(HEAD(xs))(Y(MINUS(n)(ONE))(TAIL(xs)))(x)))
+```
+
+***
+
 Return a list comprised of the first `n` elements of a list `xs`.
 
-`ZIP = FIX(Y => xs => ys => IF_THEN_ELSE(IS_EMPTY(xs))(EMPTY_LIST)(IF_THEN_ELSE(IS_EMPTY(ys))(EMPTY_LIST)(x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))`
+```
+ZIP = FIX(Y => xs => ys =>
+    IF_THEN_ELSE(IS_EMPTY(xs))
+      (EMPTY_LIST)
+      (IF_THEN_ELSE(IS_EMPTY(ys))
+        (EMPTY_LIST)
+        (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
+```
+
+***
+
 Zip two lists together into a new list of pairs.
 
-`ZIP_WITH = FIX(Y => f => xs => ys => IF_THEN_ELSE(IS_EMPTY(xs))(EMPTY_LIST)(IF_THEN_ELSE(IS_EMPTY(ys))(EMPTY_LIST)(x => LIST_ELEMENT(f(HEAD(xs))(HEAD(ys)))(Y(f)(TAIL(xs))(TAIL(ys)))(x))))`
+```
+ZIP_WITH = FIX(Y => f => xs => ys =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (IF_THEN_ELSE(IS_EMPTY(ys))
+      (EMPTY_LIST)
+      (x => LIST_ELEMENT(f(HEAD(xs))(HEAD(ys)))(Y(f)(TAIL(xs))(TAIL(ys)))(x))))
+```
+
+***
+
 Zip two list together using a custom, binary function.
 
-`INSERT = FIX(Y => n => xs => IF_THEN_ELSE(IS_EMPTY(xs))(LIST_ELEMENT(n)(EMPTY_LIST))(IF_THEN_ELSE(GREATER_THAN(n)(HEAD(xs)))(x => LIST_ELEMENT(HEAD(xs))(Y(n)(TAIL(xs)))(x))(LIST_ELEMENT(n)(xs))))`
+```
+INSERT = FIX(Y => n => xs =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+	   (LIST_ELEMENT(n)(EMPTY_LIST))
+	   (IF_THEN_ELSE(GREATER_THAN(n)(HEAD(xs)))
+	     (x => LIST_ELEMENT(HEAD(xs))(Y(n)(TAIL(xs)))(x))
+	     (LIST_ELEMENT(n)(xs))))
+```
+
 Insert a number `n` into a list of numbers at the first position where it is less than or equal to the next number.
+
+***
 
 `SORT = FOLD(INSERT)(EMPTY_LIST)`
 Sort a list in ascending order.
 
+***
+
 `ZEROS = FIX(Y => LIST_ELEMENT(ZERO)(Y))`
 Return an infinite list in which every element is `ZERO`.
 
+***
+
 `REPEAT = x => FIX(Y => LIST_ELEMENT(x)(Y))`
 Return an infinite list in which every element is `x`.
+
+***
 
 **Monoid**	
 
@@ -192,17 +364,28 @@ Identity of lists.
 `MAPPEND = APPEND`
 Associative operation for lists.
 
+***
+
 **Functor**
 
 `FMAP = MAP`
 Function mapping for lists.
+
+***
 
 **Applicative**
 
 `PURE = x => LIST_ELEMENT(x)(EMPTY_LIST)`
 Identity for applicative list.
 
-`AP = FIX(Y => fs => xs => IF_THEN_ELSE(IS_EMPTY(xs))(EMPTY_LIST)(IF_THEN_ELSE(IS_EMPTY(fs))(EMPTY_LIST)(x => MAPPEND(MAP(HEAD(fs))(xs))(Y(TAIL(fs))(xs))(x))))`
+```
+AP = FIX(Y => fs => xs =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (IF_THEN_ELSE(IS_EMPTY(fs))(EMPTY_LIST)
+      (x => MAPPEND(MAP(HEAD(fs))(xs))(Y(TAIL(fs))(xs))(x))))
+```
+
 Applicative operation for lists. Applies every function in `fs` to every element in `xs` and returns the result in a new list.
 
 Example:
@@ -213,7 +396,15 @@ AP_LIST = AP(FUNC_LIST)(LIST)
 // toArrayInt(AP_LIST) = [2,3,4,3,4,5,4,5,6]
 ```
 
-`AP_ZIP_LIST = fs => xs => IF_THEN_ELSE(IS_EMPTY(xs))(EMPTY_LIST)(IF_THEN_ELSE(IS_EMPTY(fs))(EMPTY_LIST)(ZIP_WITH(ID)(fs)(xs)))`
+
+```
+AP_ZIP_LIST = fs => xs =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (IF_THEN_ELSE(IS_EMPTY(fs))(EMPTY_LIST)
+      (ZIP_WITH(ID)(fs)(xs)))
+```
+
 Applicative operation for zip lists. Applies each function in `fs` to each parallel element in `xs` and returns the result in a new list.
 
 Example:
@@ -223,6 +414,8 @@ FUNC_LIST = MAP(PLUS)(LIST)
 ZIP_LIST = AP_ZIP_LIST(FUNC_LIST)(REVERSE(LIST))
 // toArrayInt(ZIP_LIST) = [4,4,4]
 ```
+
+***
 
 **Monad**
 
@@ -339,6 +532,8 @@ LIST = RANGE(ONE)(FIFTEEN)
 FB = FIZZBUZZFUNC(LIST)
 // toFizzBuzz(FB) = [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]
 ```
+
+[Expansion](FizzBuzz.md) of `FIZZBUZZFUNC` into un-abstracted function calls.
 
 **Utility functions**
 
