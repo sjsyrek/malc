@@ -282,7 +282,10 @@ Fold a binary function `f` with accumulator `z` over a list `xs` and return the 
 
 ***
 
-`MAP = f => FOLD(x => xs => LIST_ELEMENT(f(x))(xs))(EMPTY_LIST)`
+```
+MAP = f => FOLD(x => xs => LIST_ELEMENT(f(x))(xs))(EMPTY_LIST)
+```
+
 Apply a function `f` to every element in a list `xs`.
 
 ***
@@ -324,9 +327,9 @@ Return the value at index `n` of list `xs`.
 PUSH = x => xs => FOLD(LIST_ELEMENT)(LIST_ELEMENT(x)(EMPTY_LIST))(xs)
 ```
 
-***
-
 Append the value `x` to the end of the list `xs`.
+
+***
 
 ```
 APPEND = FIX(Y => xs => ys =>
@@ -335,9 +338,9 @@ APPEND = FIX(Y => xs => ys =>
     (x => LIST_ELEMENT(HEAD(xs))(Y(TAIL(xs))(ys))(x)))
 ```
 
-***
-
 Append a list `ys` onto the end of a list `xs`.
+
+***
 
 ```
 LENGTH = xs => (FIX(Y => xs => n =>
@@ -347,9 +350,9 @@ LENGTH = xs => (FIX(Y => xs => n =>
 	  (xs)(ZERO)
 ```
 
-***
-
 Return the length of a list `xs`.
+
+***
 
 ```
 REVERSE = xs => (FIX(Y => xs => a =>
@@ -359,9 +362,9 @@ REVERSE = xs => (FIX(Y => xs => a =>
   (xs)(EMPTY_LIST)
 ```
 
-***
-
 Return a list with the elements of a list `xs` in reverse order.
+
+***
 
 ```
 TAKE = FIX(Y => n => xs =>
@@ -372,9 +375,9 @@ TAKE = FIX(Y => n => xs =>
 	     (x => LIST_ELEMENT(HEAD(xs))(Y(MINUS(n)(ONE))(TAIL(xs)))(x)))
 ```
 
-***
-
 Return a list comprised of the first `n` elements of a list `xs`.
+
+***
 
 ```
 ZIP = FIX(Y => xs => ys =>
@@ -385,9 +388,9 @@ ZIP = FIX(Y => xs => ys =>
         (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
 ```
 
-***
-
 Zip two lists together into a new list of pairs.
+
+***
 
 ```
 ZIP_WITH = FIX(Y => f => xs => ys =>
@@ -398,9 +401,9 @@ ZIP_WITH = FIX(Y => f => xs => ys =>
       (x => LIST_ELEMENT(f(HEAD(xs))(HEAD(ys)))(Y(f)(TAIL(xs))(TAIL(ys)))(x))))
 ```
 
-***
-
 Zip two list together using a custom, binary function.
+
+***
 
 ```
 INSERT = FIX(Y => n => xs =>
