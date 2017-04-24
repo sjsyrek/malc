@@ -195,11 +195,11 @@ TAKE = FIX(Y => n => xs =>
 	     (x => LIST_ELEMENT(HEAD(xs))(Y(MINUS(n)(ONE))(TAIL(xs)))(x)))
 
 ZIP = FIX(Y => xs => ys =>
-    IF_THEN_ELSE(IS_EMPTY(xs))
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (IF_THEN_ELSE(IS_EMPTY(ys))
       (EMPTY_LIST)
-      (IF_THEN_ELSE(IS_EMPTY(ys))
-        (EMPTY_LIST)
-        (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
+      (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
 
 ZIP_WITH = FIX(Y => f => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
@@ -255,8 +255,10 @@ AP_ZIP_LIST = fs => xs =>
 
 RETURN = PURE
 
-BIND = FIX(Y => xs => f => IS_EMPTY(xs)(EMPTY_LIST)
-  (x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))
+BIND = FIX(Y => xs => f =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))
 
 // factorial
 
