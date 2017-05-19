@@ -87,13 +87,13 @@ GREATER_THAN = n => m => AND(GREATER_THAN_OR_EQUAL(n)(m))
 
 MAX = x => y =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(x)(y))
-  	(y)
-	  (x)
+    (y)
+    (x)
 
 MIN = x => y =>
   IF_THEN_ELSE(EQUALS(MAX(x)(y))(x))
-	  (y)
-	  (x)
+    (y)
+    (x)
 
 // function composition
 
@@ -105,14 +105,14 @@ FIX = f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y)))
 
 // advanced arithmetic
 
-MOD = FIX(Y => n => m =>
+MOD = FIX(r => n => m =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
-    (x => Y(MINUS(n)(m))(m)(x))
+    (x => r(MINUS(n)(m))(m)(x))
     (n))
 
-DIV = FIX(Y => n => m =>
+DIV = FIX(r => n => m =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
-    (x => SUCC(Y(MINUS(n)(m))(m))(x))
+    (x => SUCC(r(MINUS(n)(m))(m))(x))
     (ZERO))
 
 // other combinators
@@ -143,10 +143,10 @@ TAIL = xs => SECOND(SECOND(xs))
 
 // fold/map/filter
 
-FOLD = FIX(Y => f => z => xs =>
+FOLD = FIX(r => f => z => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (z)
-    (x => f(HEAD(xs))(Y(f)(z)(TAIL(xs)))(x)))
+    (x => f(HEAD(xs))(r(f)(z)(TAIL(xs)))(x)))
 
 MAP = f => FOLD(x => xs => LIST_ELEMENT(f(x))(xs))(EMPTY_LIST)
 
@@ -154,74 +154,74 @@ FILTER = p => FOLD(x => xs =>
   IF_THEN_ELSE(p(x))
     (LIST_ELEMENT(x)(xs))
     (xs))
-   (EMPTY_LIST)
+  (EMPTY_LIST)
 
 // other list functions
 
-RANGE = FIX(Y => m => n =>
+RANGE = FIX(r => m => n =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(m)(n))
-    (x => LIST_ELEMENT(m)(Y(SUCC(m))(n))(x))
+    (x => LIST_ELEMENT(m)(r(SUCC(m))(n))(x))
     (EMPTY_LIST))
 
-INDEX = FIX(Y => xs => n =>
+INDEX = FIX(r => xs => n =>
   IF_THEN_ELSE(IS_ZERO(n))
     (HEAD(xs))
-    (x => Y(TAIL(xs))(PRED(n))(x)))
+    (x => r(TAIL(xs))(PRED(n))(x)))
 
 PUSH = x => xs => FOLD(LIST_ELEMENT)(LIST_ELEMENT(x)(EMPTY_LIST))(xs)
 
-APPEND = FIX(Y => xs => ys =>
+APPEND = FIX(r => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (ys)
-    (x => LIST_ELEMENT(HEAD(xs))(Y(TAIL(xs))(ys))(x)))
+    (x => LIST_ELEMENT(HEAD(xs))(r(TAIL(xs))(ys))(x)))
 
-LENGTH = xs => (FIX(Y => xs => n =>
+LENGTH = xs => (FIX(r => xs => n =>
 	IF_THEN_ELSE(IS_EMPTY(xs))
 	  (n)
-	  (x => Y(TAIL(xs))(SUCC(n))(x))))
+	  (x => r(TAIL(xs))(SUCC(n))(x))))
 	  (xs)(ZERO)
 
-REVERSE = xs => (FIX(Y => xs => a =>
+REVERSE = xs => (FIX(r => xs => a =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (a)
-    (x => (Y(TAIL(xs))(LIST_ELEMENT(HEAD(xs))(a)))(x))))
+    (x => (r(TAIL(xs))(LIST_ELEMENT(HEAD(xs))(a)))(x))))
   (xs)(EMPTY_LIST)
 
-TAKE = FIX(Y => n => xs =>
+TAKE = FIX(r => n => xs =>
   IF_THEN_ELSE(LESS_THAN_OR_EQUAL(n)(ZERO))
-	   (EMPTY_LIST)
-	   (IF_THEN_ELSE(IS_EMPTY(xs)))
-	     (EMPTY_LIST)
-	     (x => LIST_ELEMENT(HEAD(xs))(Y(MINUS(n)(ONE))(TAIL(xs)))(x)))
+    (EMPTY_LIST)
+    (IF_THEN_ELSE(IS_EMPTY(xs)))
+      (EMPTY_LIST)
+      (x => LIST_ELEMENT(HEAD(xs))(r(MINUS(n)(ONE))(TAIL(xs)))(x)))
 
-ZIP = FIX(Y => xs => ys =>
+ZIP = FIX(r => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
     (IF_THEN_ELSE(IS_EMPTY(ys))
       (EMPTY_LIST)
-      (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(Y(TAIL(xs))(TAIL(ys)))(x))))
+      (x => LIST_ELEMENT(PAIR(HEAD(xs))(HEAD(ys)))(r(TAIL(xs))(TAIL(ys)))(x))))
 
-ZIP_WITH = FIX(Y => f => xs => ys =>
+ZIP_WITH = FIX(r => f => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
     (IF_THEN_ELSE(IS_EMPTY(ys))
       (EMPTY_LIST)
-      (x => LIST_ELEMENT(f(HEAD(xs))(HEAD(ys)))(Y(f)(TAIL(xs))(TAIL(ys)))(x))))
+      (x => LIST_ELEMENT(f(HEAD(xs))(HEAD(ys)))(r(f)(TAIL(xs))(TAIL(ys)))(x))))
 
-INSERT = FIX(Y => n => xs =>
+INSERT = FIX(r => n => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
-	   (LIST_ELEMENT(n)(EMPTY_LIST))
-	   (IF_THEN_ELSE(GREATER_THAN(n)(HEAD(xs)))
-	     (x => LIST_ELEMENT(HEAD(xs))(Y(n)(TAIL(xs)))(x))
-	     (LIST_ELEMENT(n)(xs))))
+    (LIST_ELEMENT(n)(EMPTY_LIST))
+    (IF_THEN_ELSE(GREATER_THAN(n)(HEAD(xs)))
+      (x => LIST_ELEMENT(HEAD(xs))(r(n)(TAIL(xs)))(x))
+      (LIST_ELEMENT(n)(xs))))
 
 SORT = FOLD(INSERT)(EMPTY_LIST)
 
 // streams
 
-ZEROS = FIX(Y => LIST_ELEMENT(ZERO)(Y))
+ZEROS = FIX(r => LIST_ELEMENT(ZERO)(r))
 
-REPEAT = x => FIX(Y => LIST_ELEMENT(x)(Y))
+REPEAT = x => FIX(r => LIST_ELEMENT(x)(r))
 
 // functional structures (list implementations)
 
@@ -239,11 +239,11 @@ FMAP = MAP
 
 PURE = x => LIST_ELEMENT(x)(EMPTY_LIST)
 
-AP = FIX(Y => fs => xs =>
+AP = FIX(r => fs => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
     (IF_THEN_ELSE(IS_EMPTY(fs))(EMPTY_LIST)
-      (x => MAPPEND(MAP(HEAD(fs))(xs))(Y(TAIL(fs))(xs))(x))))
+      (x => MAPPEND(MAP(HEAD(fs))(xs))(r(TAIL(fs))(xs))(x))))
 
 AP_ZIP_LIST = fs => xs =>
   IF_THEN_ELSE(IS_EMPTY(xs))
@@ -255,10 +255,10 @@ AP_ZIP_LIST = fs => xs =>
 
 RETURN = PURE
 
-BIND = FIX(Y => xs => f =>
+BIND = FIX(r => xs => f =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
-    (x => MAPPEND(f(HEAD(xs)))(Y(TAIL(xs))(f))(x)))
+    (x => MAPPEND(f(HEAD(xs)))(r(TAIL(xs))(f))(x)))
 
 // factorial
 
@@ -266,10 +266,10 @@ F = f => n => IS_ZERO(n)(ONE)(x => MULT(n)(f(PRED(n)))(x))
 
 FACT = FIX(F)
 
-FACT = FIX(Y => n =>
+FACT = FIX(r => n =>
   IS_ZERO(n)
     (ONE)
-    (x => MULT(n)(Y(PRED(n)))(x)))
+    (x => MULT(n)(r(PRED(n)))(x)))
 
 AND_EQUALS_TWO = COMPOSE(AND)(EQUALS(TWO))
 
@@ -281,7 +281,7 @@ FACT_CHECK = ALL_TWOS(
   )(LIST_ELEMENT(
     FIX(F)(TWO)
   )(LIST_ELEMENT(
-    (Y => (x => Y(y => x(x)(y)))(x => Y(y => x(x)(y))))(F)(TWO)
+    (r => (x => r(y => x(x)(y)))(x => r(y => x(x)(y))))(F)(TWO)
   )(LIST_ELEMENT(
     (x => F(y => x(x)(y)))(x => F(y => x(x)(y)))(TWO)
   )(LIST_ELEMENT(
@@ -313,12 +313,12 @@ FACT_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n
 
 // fibonacci
 
-FIB = FIX(Y => n =>
+FIB = FIX(r => n =>
   IS_ZERO(n)
     (ZERO)
     (IF_THEN_ELSE(EQUALS(n)(ONE))
       (ONE)
-      (x => PLUS(Y(MINUS(n)(ONE)))(Y(MINUS(n)(TWO)))(x))))
+      (x => PLUS(r(MINUS(n)(ONE)))(r(MINUS(n)(TWO)))(x))))
 
 FIB_EXP = (f => (x => f(y => x(x)(y)))(x => f(y => x(x)(y))))(f => n => (n => n(x => (x => y => y))(x => y => x))(n)(f => x => x)((x => x)((n => m => (x => y => x(y)(x => y => y))((n => m => (n => n(x => (x => y => y))(x => y => x))((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(m)))(n)(m))((n => m => (n => n(x => (x => y => y))(x => y => x))((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(m)))(m)(n)))(n)(f => x => f(x)))(f => x => f(x))(x => (n => m => m(n => f => x => f(n(f)(x)))(n))(f((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(f => x => f(x))))(f((n => m => m(n => n(p => z => z((n => f => x => f(n(f)(x)))(p(x => y => x)))(p(x => y => x)))(z => z(f => x => x)(f => x => x))(x => y => y))(n))(n)(f => x => f(f(x)))))(x))))
 
@@ -334,11 +334,11 @@ fromInt = n => n == 0 ? f => x => x : f => x => f(fromInt(n - 1)(f)(x))
 
 toArray = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [HEAD(xs)].concat(toArray(TAIL(xs))))
 
-fromArray = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(xs.slice(0,1))(fromArray(xs.slice(1)))
+fromArray = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(xs[0])(fromArray(xs.slice(1)))
 
 toArrayInt = xs => [].concat(toBool(IS_EMPTY(xs)) ? [] : [toInt(HEAD(xs))].concat(toArrayInt(TAIL(xs))))
 
-fromArrayInt = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(xs.slice(0,1)))(fromArrayInt(xs.slice(1)))
+fromArrayInt = xs => xs.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(xs[0]))(fromArrayInt(xs.slice(1)))
 
 toPair = p => {
   return {fst: FIRST(p), snd: SECOND(p)}
@@ -350,7 +350,7 @@ toPairInt = p => {
 
 toString = str => toArrayInt(str).map(n => String.fromCharCode(n)).join("")
 
-fromString = str => str.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(str.charCodeAt(str.substr(0,1))))(fromString(str.substr(1)))
+fromString = str => str.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(str.charCodeAt(str[0])))(fromString(str.substr(1)))
 
 toFizzBuzz = fb => toArray(fb).map(x => toString(x) === "" ? toInt(x) : toString(x))
 
@@ -441,3 +441,4 @@ tests = {
 }
 
 allTests = () => Object.values(tests).reduce((x, y) => x && y)
+console.log(allTests() ? "All tests passed." : "Tests failed.")
