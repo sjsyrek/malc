@@ -13,6 +13,8 @@ Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 
 ## Specification
 
+This is only a partial list of functions that each implementation should provide. For other examples, read the code.
+
 ```
 ID = λx. x
 ```
