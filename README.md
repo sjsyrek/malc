@@ -8,8 +8,8 @@ Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 
 ## Implementations
 
-* [JavaScript ES2015](/javascript/README.md)
-* [Python 3](/python/README.md)
+* [JavaScript ES2015](https://github.com/sjsyrek/malc/tree/master/javascript)
+* [Python 3](https://github.com/sjsyrek/malc/tree/master/python)
 
 ## Specification
 
