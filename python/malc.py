@@ -139,6 +139,13 @@ HEAD = lambda xs: FIRST(SECOND(xs))
 
 TAIL = lambda xs: SECOND(SECOND(xs))
 
+# factorial
+
+FACT = FIX(lambda r: lambda n:
+  IS_ZERO(n)
+    (ONE)
+    (lambda x: MULT(n)(r(PRED(n)))(x)))
+
 # utility functions
 
 to_bool = lambda b: IF_THEN_ELSE(b)(True)(False)
