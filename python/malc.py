@@ -20,7 +20,8 @@ OR = lambda x: lambda y: x(TRUE)(y)
 
 NOT = lambda x: x(FALSE)(TRUE)
 
-XOR = lambda x: lambda y: NOT(AND(x)(y))
+XOR = lambda x: lambda y: AND(OR(x)(y))(NOT(AND(x)(y)))
+
 
 # branching
 

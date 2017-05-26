@@ -20,7 +20,7 @@ OR = x => y => x(TRUE)(y)
 
 NOT = x => x(FALSE)(TRUE)
 
-XOR = x => y => NOT(AND(x)(y))
+XOR = x => y => AND(OR(x)(y))(NOT(AND(x)(y)))
 
 // branching
 
