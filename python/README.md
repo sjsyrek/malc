@@ -73,8 +73,11 @@ FIZZBUZZFUNC = MAP(lambda n: \
 
 Test the FizzBuzz functions as follows:
 
-`to_fizzbuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN)))`
-`to_fizzbuzz(FIZZBUZZFUNC_EXP(RANGE(ONE)(FIFTEEN)))`
+```python
+to_fizzbuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN)))
+
+to_fizzbuzz(FIZZBUZZFUNC_EXP(RANGE(ONE)(FIFTEEN)))
+```
 
 You should get the following output for both:
 

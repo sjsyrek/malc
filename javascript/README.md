@@ -66,8 +66,11 @@ FIZZBUZZFUNC = MAP(n =>
 
 Test the FizzBuzz functions as follows:
 
-`toFizzBuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN)))`
-`toFizzBuzz(FIZZBUZZFUNC_EXP(RANGE(ONE)(FIFTEEN)))`
+```js
+toFizzBuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN)))
+
+toFizzBuzz(FIZZBUZZFUNC_EXP(RANGE(ONE)(FIFTEEN)))
+```
 
 You should get the following output for both:
 
