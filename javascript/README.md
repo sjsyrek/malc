@@ -51,7 +51,7 @@ INDEX = FIX(r => xs => n =>
 
 _Inspired by Tom Stuart, [Understanding Computation](https://www.amazon.co.uk/gp/product/1449329276/ref=as_li_tl?ie=UTF8&camp=1634&creative=19450&creativeASIN=1449329276&linkCode=as2&tag=computationclub-21&linkId=Y33MSPW2C4U3YVP5) and [Programming with Nothing](https://speakerdeck.com/tomstuart/programming-with-nothing)_
 
-```
+```js
 FIZZBUZZFUNC = MAP(n =>
   IF_THEN_ELSE(IS_ZERO(MOD(n)(FIFTEEN)))
     (FIZZBUZZ)
@@ -63,7 +63,7 @@ FIZZBUZZFUNC = MAP(n =>
 ```
 
 Example:
-```
+```js
 LIST = RANGE(ONE)(FIFTEEN)
 FB = FIZZBUZZFUNC(LIST)
 // toFizzBuzz(FB) = [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]
