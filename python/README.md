@@ -69,7 +69,7 @@ FIZZBUZZFUNC = MAP(lambda n: \
                 (n))))
 ```
 
-`FIZZBUZZFUNC_EXP` is the same expression expanded into un-abstracted function calls.
+`FIZZBUZZFUNC_EXP` is the same expression [expanded into un-abstracted function calls]((fizzbuzz_python.md).
 
 Test the FizzBuzz functions as follows:
 
@@ -78,4 +78,6 @@ Test the FizzBuzz functions as follows:
 
 You should get the following output for both:
 
-`[1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'FizzBuzz']`
+```python
+[1, 2, 'Fizz', 4, 'Buzz', 'Fizz', 7, 8, 'Fizz', 'Buzz', 11, 'Fizz', 13, 14, 'FizzBuzz']
+```
