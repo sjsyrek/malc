@@ -7,28 +7,28 @@ Load the `malc.html` page into your browser and test the functions in your JavaS
 ## How to write a recursive function using lambdas in JavaScript
 
 1. Write the function as you normally would without a fixpoint combinator:
-    ```js
-    FACT = n =>
-      IS_ZERO(n)
-        (ONE)
-        (MULT(n)(FACT(PRED(n))))
-    ```
+```js
+FACT = n =>
+  IS_ZERO(n)
+    (ONE)
+    (MULT(n)(FACT(PRED(n))))
+```
 
-2. Wrap the whole thing in `FIX`, add a parameter to the front of the definition, and replace all recursive function calls with that parameter:
-    ```js
-    FACT = FIX(r => n =>
-      IS_ZERO(n)
-        (ONE)
-        (MULT(n)(r(PRED(n)))))
-    ```
+2. Wrap the whole thing in `FIX`, add a parameter (e.g. `r`) to the front of the definition, and replace all recursive function calls with that parameter:
+```js
+FACT = FIX(r => n =>
+  IS_ZERO(n)
+    (ONE)
+    (MULT(n)(r(PRED(n)))))
+```
 
-3. Wrap the recursive branch of your function in a dummy closure by adding a parameter to the front of that branch and applying the last function in that branch to the same parameter:
-    ```js
-    FACT = FIX(r => n =>
-      IS_ZERO(n)
-        (ONE)
-        (x => MULT(n)(r(PRED(n)))(x)))
-    ```
+3. Wrap the recursive branch of your function in a dummy closure by adding a parameter (e.g. `x`) to the front of that branch and applying the last function in that branch to the same parameter:
+```js
+FACT = FIX(r => n =>
+  IS_ZERO(n)
+    (ONE)
+    (x => MULT(n)(r(PRED(n)))(x)))
+```
 
 With this method, you can easily convert, e.g. Haskell functions, into JavaScript lambdas that work with malc:
 
