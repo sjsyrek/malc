@@ -2,10 +2,11 @@
 
 `lambda`, `lambda` everywhere...
 
-Load into your Python REPL:
+Load the code into your Python REPL:
 ```
 python3 -i malc.py
 ```
+And then test to your heart's content.
 
 ## How to write a recursive function using lambdas in Python
 
