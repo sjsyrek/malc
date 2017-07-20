@@ -62,11 +62,15 @@ FIZZBUZZFUNC = MAP(n =>
         (n))))
 ```
 
-Example:
-```js
-LIST = RANGE(ONE)(FIFTEEN)
-FB = FIZZBUZZFUNC(LIST)
-// toFizzBuzz(FB) = [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]
-```
+`FIZZBUZZFUNC_EXP` is the same expression [expanded into un-abstracted function calls]((fizzbuzz_javascript.md).
 
-[Expansion](FizzBuzz.md) of `FIZZBUZZFUNC` into un-abstracted function calls.
+Test the FizzBuzz functions as follows:
+
+`toFizzBuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN)))`
+`toFizzBuzz(FIZZBUZZFUNC_EXP(RANGE(ONE)(FIFTEEN)))`
+
+You should get the following output for both:
+
+```js
+[1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]
+```
