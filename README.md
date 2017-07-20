@@ -25,6 +25,7 @@ Identity combinator. Returns `x`.
 
 ```
 TRUE = λx. λy. x
+
 FALSE = λx. λy. y
 ```
 
@@ -34,8 +35,11 @@ Boolean true and false.
 
 ```
 AND = λx. λy. x y FALSE
+
 OR = λx. λy. x TRUE y
+
 NOT = λx. x FALSE TRUE
+
 XOR = λx. λy. NOT(AND x y)
 ```
 
@@ -53,8 +57,11 @@ Conditional branching. Note that `IF_THEN_ELSE` is identical in value to `ID`.
 
 ```
 ZERO = λf. λx. x
+
 ONE = λf. λx. f x
+
 TWO = λf. λx. f(f(x))
+
 THREE = λf. λx. f(f(f(x)))
 ```
 
@@ -120,9 +127,13 @@ Check whether a number is equal to `ZERO`.
 
 ```
 LESS_THAN_OR_EQUAL = λn. λm. IS_ZERO(MINUS n m)
+
 LESS_THAN = λn. λm. AND(LESS_THAN_OR_EQUAL n m)(NOT IS_ZERO(n(PRED m)))
+
 EQUALS = λn. λm. AND(LESS_THAN_OR_EQUAL n m)(LESS_THAN_OR_EQUAL m n)
+
 GREATER_THAN_OR_EQUAL = λn. λm. IS_ZERO(n(PRED m))
+
 GREATER_THAN = λn. λm. AND(GREATER_THAN_OR_EQUAL n m)(NOT(IS_ZERO(MINUS n m)))
 ```
 
@@ -156,6 +167,7 @@ Create a pair (2-tuple) out of two numbers.
 
 ```
 FIRST = λp. p(λx. λy. x)
+
 SECOND = λp. p(λx. λy. y)
 ```
 
