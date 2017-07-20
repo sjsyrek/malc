@@ -62,7 +62,7 @@ FIZZBUZZFUNC = MAP(n =>
         (n))))
 ```
 
-`FIZZBUZZFUNC_EXP` is the same expression [expanded into un-abstracted function calls]((fizzbuzz_javascript.md).
+`FIZZBUZZFUNC_EXP` is the same expression [expanded into un-abstracted function calls](fizzbuzz_javascript.md).
 
 Test the FizzBuzz functions as follows:
 
