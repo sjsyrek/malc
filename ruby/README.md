@@ -1,6 +1,6 @@
 # Ruby
 
-For some reason, Ruby calls them procs even though the language also has lambdas. And blocks. I'm not a Rubyist, so please don't email me about this.
+For some reason, Ruby calls them procs even though the language also has lambdas. And blocks. I don't really know the difference, and I don't really care. I'm not a Rubyist, so please don't email me about this.
 
 Load the code into irb:
 ```
