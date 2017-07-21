@@ -10,6 +10,7 @@ Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 
 * [JavaScript ES2015](https://github.com/sjsyrek/malc/tree/master/javascript)
 * [Python 3](https://github.com/sjsyrek/malc/tree/master/python)
+* [Ruby](https://github.com/sjsyrek/malc/tree/master/ruby)
 
 ## Specification
 
