@@ -24,7 +24,13 @@ XOR = x => y => AND(OR(x)(y))(NOT(AND(x)(y)))
 
 // branching
 
-IF_THEN_ELSE = p => x => y => p(x)(y) // IF_THEN_ELSE = ID
+IF_THEN_ELSE = p => x => y => p(x)(y)
+
+IF_THEN_ELSE = p => x => p(x)
+
+IF_THEN_ELSE = p => p
+
+IF_THEN_ELSE = ID
 
 // natural numbers
 
@@ -129,6 +135,12 @@ FIRST = p => p(x => y => x)
 
 SECOND = p => p(x => y => y)
 
+// n-ary tuples
+
+TRIPLE = x => y => z => p => p(x)(y)(z)
+
+THIRD = p => p(x => y => z => z) // FIRST and SECOND will not work for this
+
 // lists
 
 LIST_ELEMENT = x => xs => PAIR(FALSE)(PAIR(x)(xs))
@@ -148,7 +160,14 @@ FOLD = FIX(r => f => z => xs =>
     (z)
     (x => f(HEAD(xs))(r(f)(z)(TAIL(xs)))(x)))
 
+MAP = FIX(r => f => xs =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (x => LIST_ELEMENT(f(HEAD(xs)))(r(f)(TAIL(xs)))(x)))
+
 MAP = f => FOLD(x => xs => LIST_ELEMENT(f(x))(xs))(EMPTY_LIST)
+
+MAP = f => FOLD(COMPOSE(LIST_ELEMENT)(f))(EMPTY_LIST)
 
 FILTER = p => FOLD(x => xs =>
   IF_THEN_ELSE(p(x))
@@ -194,6 +213,13 @@ TAKE = FIX(r => n => xs =>
       (EMPTY_LIST)
       (x => LIST_ELEMENT(HEAD(xs))(r(MINUS(n)(ONE))(TAIL(xs)))(x)))
 
+DROP = FIX(r => n => xs =>
+  IF_THEN_ELSE(LESS_THAN_OR_EQUAL(n)(ZERO))
+  (xs)
+  (IF_THEN_ELSE(IS_EMPTY(xs))
+    (EMPTY_LIST)
+    (x => r(MINUS(n)(ONE))(TAIL(xs))(x))))
+
 ZIP = FIX(r => xs => ys =>
   IF_THEN_ELSE(IS_EMPTY(xs))
     (EMPTY_LIST)
@@ -222,6 +248,55 @@ SORT = FOLD(INSERT)(EMPTY_LIST)
 ZEROS = FIX(r => LIST_ELEMENT(ZERO)(r))
 
 REPEAT = x => FIX(r => LIST_ELEMENT(x)(r))
+
+// folds
+
+SUM = FIX(r => xs =>
+  IF_THEN_ELSE(IS_EMPTY(xs))
+    (ZERO)
+    (x => PLUS(HEAD(xs))(r(TAIL(xs)))(x)))
+
+SUM_FOLD = FOLD(PLUS)(ZERO)
+
+PRODUCT_FOLD = FOLD(MULT)(ONE)
+
+AND_FOLD = FOLD(AND)(TRUE)
+
+OR_FOLD = FOLD(OR)(FALSE)
+
+LENGTH_FOLD = FOLD(x => n => PLUS(ONE)(n))(ZERO)
+
+REVERSE_FOLD = FOLD(x => xs => APPEND(xs)(LIST_ELEMENT(x)(EMPTY_LIST)))(EMPTY_LIST)
+
+FOLDL = f => z => xs => FOLD(x => g => (y => g(f(y)(x))))(ID)(xs)(z)
+
+REVERSE_FOLDL = FOLDL(xs => x => LIST_ELEMENT(x)(xs))(EMPTY_LIST) // more efficient than FOLD for this operation
+
+// binary numbers using lists
+
+B_ZERO = LIST_ELEMENT(ZERO)
+
+B_ONE = LIST_ELEMENT(ONE)
+
+BINARY_ZERO = B_ZERO(EMPTY_LIST)
+
+BINARY_ONE = B_ONE(EMPTY_LIST)
+
+BINARY_TWO = B_ONE(B_ZERO)(EMPTY_LIST)
+
+BINARY_THREE = B_ONE(B_ONE)(EMPTY_LIST)
+
+// trees
+
+EMPTY_TREE = EMPTY_LIST
+
+NODE = v => l => r => LIST_ELEMENT(v)(LIST_ELEMENT(l)(LIST_ELEMENT(r)(EMPTY_TREE)))
+
+VALUE = t => HEAD(t)
+
+LEFT = t => HEAD(TAIL(t))
+
+RIGHT = t => HEAD(TAIL(TAIL(t)))
 
 // functional structures (list implementations)
 
@@ -348,9 +423,15 @@ toPairInt = p => {
   return {fst: (toInt(FIRST(p))), snd: (toInt(SECOND(p)))}
 }
 
+printPair = p => `(${p.fst},${p.snd})`
+
 toString = str => toArrayInt(str).map(n => String.fromCharCode(n)).join("")
 
 fromString = str => str.length === 0 ? EMPTY_LIST : LIST_ELEMENT(fromInt(str.charCodeAt(str[0])))(fromString(str.substr(1)))
+
+toTreeInt = t => toBool(IS_EMPTY(t)) ? [] : [toInt(VALUE(t)), toTreeInt(LEFT(t)), toTreeInt(RIGHT(t))]
+
+printTree = t => t.length === 0 ? "[]" : `[${t[0]}, ${printTree(t[1])}, ${printTree(t[2])}]`
 
 toFizzBuzz = fb => toArray(fb).map(x => toString(x) === "" ? toInt(x) : toString(x))
 
@@ -366,6 +447,7 @@ toLambda = x => {
 
 p = PAIR(ONE)(TWO)
 l = RANGE(ONE)(THREE)
+t = NODE(TWO)(NODE(ONE)(EMPTY_TREE)(EMPTY_TREE))(NODE(THREE)(EMPTY_TREE)(EMPTY_TREE))
 
 tests = {
   id: ID(1) === 1,
@@ -429,6 +511,21 @@ tests = {
   sort: toArrayInt(SORT(REVERSE(l))).every((e,i) => e === toArrayInt(l)[i]),
   zeros: toArrayInt(TAKE(THREE)(ZEROS)).every((e,i) => e === [0,0,0][i]),
   repeat: toArrayInt(TAKE(THREE)(REPEAT(ONE))).every((e,i) => e === [1,1,1][i]),
+  sum: toInt(SUM(l)) === 6,
+  sumFold: toInt(SUM_FOLD(l)) === 6,
+  productFold: toInt(PRODUCT_FOLD(l)) === 6,
+  andFold: toBool(AND_FOLD(LIST_ELEMENT(TRUE)(LIST_ELEMENT(TRUE)(LIST_ELEMENT(TRUE)(EMPTY_LIST))))) === true,
+  andFold: toBool(AND_FOLD(LIST_ELEMENT(TRUE)(LIST_ELEMENT(TRUE)(LIST_ELEMENT(FALSE)(EMPTY_LIST))))) === false,
+  orFold: toBool(OR_FOLD(LIST_ELEMENT(TRUE)(LIST_ELEMENT(TRUE)(LIST_ELEMENT(FALSE)(EMPTY_LIST))))) === true,
+  orFold: toBool(OR_FOLD(LIST_ELEMENT(FALSE)(LIST_ELEMENT(FALSE)(LIST_ELEMENT(FALSE)(EMPTY_LIST))))) === false,
+  lengthFold: toInt(LENGTH_FOLD(l)) === 3,
+  reverseFold: toArrayInt(REVERSE_FOLD(l)).every((e,i) => e === [3,2,1][i]),
+  foldl: toInt(FOLDL(PLUS)(ZERO)(l)) === 6,
+  reverseFoldl: toArrayInt(REVERSE_FOLDL(l)).every((e,i) => e === [3,2,1][i]),
+  tree: printTree(toTreeInt(t)) === "[2, [1, [], []], [3, [], []]]",
+  value: toInt(VALUE(t)) === 2,
+  left: toInt(VALUE(LEFT(t))) === 1,
+  right: toInt(VALUE(RIGHT(t))) === 3,
   pure: toArrayInt(PURE(ONE))[0] === 1,
   ap: toArrayInt(AP(MAP(PLUS)(l))(l)).every((e,i) => e === [2,3,4,3,4,5,4,5,6][i]),
   apZipList: toArrayInt(AP_ZIP_LIST(MAP(PLUS)(l))(REVERSE(l))).every((e,i) => e === [4,4,4][i]),
