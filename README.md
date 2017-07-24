@@ -2,7 +2,13 @@
 
 ## About
 
-Malc is a guide and specification for implementing an untyped [lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus) in any programming language that supports [higher-order functions](https://en.wikipedia.org/wiki/Higher-order_function). Contributions that generally follow the specification below, as well as clever or more ambitious extensions of it in the spirit of this project, are welcome.
+Malc is a guide and specification for implementing an untyped [lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus) in any programming language that supports [higher-order functions](https://en.wikipedia.org/wiki/Higher-order_function). The lambda calculus has sometimes been called the world's smallest programming language. It is a notation that consists entirely of functions and applications of functions. Even "primitive values" are represented as combinators, i.e. closures without global variables. As the foundation of functional programming, the untyped lambda calculus is simple to learn and worth learning about if you really want to understand the fundamentals of this programming paradigm. 
+
+This project offers some insight into the notion of "functions as values" by demonstrating how you can implement the lambda calculus, and thereby a means to use functions alone to compute (in principle) anything that is computable, in a number of familiar programming languages. If you study a few of them, you will realize that functional programming is a universal means of computation and is not determined by the syntax or constraints of any one language. It works the same way no matter the syntax used to represent it.
+
+The implementations included in this project define, at the least: boolean values, natural numbers, branching, and recursion. From these fundamental elements, any other computation can theoretically be modeled—though not all compilers or interpreters will be able to execute it, which is why this is strictly an educational enterprise. More ambitious implementations may translate a sizable portion of the [Haskell Prelude](https://www.stackage.org/haddock/lts-8.23/base-4.9.1.0/Prelude.html), since Haskell is essentially a lambda calculus with a type system and some syntactic sugar.
+
+Contributions that generally follow the specification below, as well as clever or more ambitious extensions of it in the spirit of this project, are welcome.
 
 Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 
@@ -14,7 +20,7 @@ Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 
 ## Specification
 
-This is only a partial list of functions that each implementation should provide. For other examples, read the code.
+This is only a partial list of functions that each implementation could provide. For other examples, read the code.
 
 ```
 ID = λx. x
@@ -154,7 +160,7 @@ Function composition.
 FIX = λy. (λx. y(x x))(λx. y(x x))
 ```
 
-The fixpoint "Z" combinator, for defining recursive functions (see above).
+The fixpoint "Z" combinator, for defining recursive functions in strict languages.
 
 ***
 
