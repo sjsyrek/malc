@@ -5,3 +5,7 @@
 # identity combinator
 
 my $ID = -> $x { $x }
+
+my $TRUE = -> $x { -> $y { $x } }
+
+my $FALSE = -> $x { -> $y { $y } }
