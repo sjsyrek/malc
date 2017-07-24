@@ -15,6 +15,7 @@ Inspired by the [Make a Lisp](https://github.com/kanaka/mal) project.
 ## Implementations
 
 * [JavaScript ES2015](https://github.com/sjsyrek/malc/tree/master/javascript)
+* [Perl 6](https://github.com/sjsyrek/malc/tree/master/perl6)
 * [Python 3](https://github.com/sjsyrek/malc/tree/master/python)
 * [Ruby](https://github.com/sjsyrek/malc/tree/master/ruby)
 
