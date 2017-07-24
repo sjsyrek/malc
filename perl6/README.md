@@ -4,11 +4,11 @@ The syntax is remarkably similar to Ruby, or Ruby is remarkably similar to Perl.
 
 Fire up the Perl 6 "REPL" and evaluate the code as follows:
 ```
-EVALFILE 'malc.pl'
+EVALFILE 'malc.p6'
 ```
 Or test directly from the command line:
 ```
-perl6 malc.pl
+perl6 malc.p6
 ```
 You will have to test it using `say` statements in the original file since this isn't a proper REPL. Supposedly, there is a way to import the code as a module, and you may feel free to submit a pull request to make it so.
 
@@ -79,7 +79,7 @@ my $FIZZBUZZFUNC = $MAP(-> $n {\
 });
 ```
 
-Test the FizzBuzz function by inserting the following line of code into the `malc.pl` file:
+Test the FizzBuzz function by inserting the following line of code into the `malc.p6` file:
 
 ```perl
 say $To_FizzBuzz($FIZZBUZZFUNC($RANGE($ONE)($FIFTEEN)));
