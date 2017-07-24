@@ -190,6 +190,101 @@ INDEX = FIX[-> r { -> xs { -> n { \
   } } } \
 ]
 
+PUSH = -> x { -> xs { FOLD[LIST_ELEMENT][LIST_ELEMENT[x][EMPTY_LIST]][xs] } }
+
+APPEND = FIX[-> r { -> xs { -> ys { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [ys] \
+    [-> x { LIST_ELEMENT[HEAD[xs]][r[TAIL[xs]][ys]][x] }] \
+  } } } \
+]
+
+TAKE = FIX[-> r { -> n { -> xs { \
+  IF_THEN_ELSE[LESS_THAN_OR_EQUAL[n][ZERO]] \
+    [EMPTY_LIST] \
+    [IF_THEN_ELSE[IS_EMPTY[xs]]] \
+      [EMPTY_LIST] \
+      [-> x { LIST_ELEMENT[HEAD[xs]][r[MINUS[n][ONE]][TAIL[xs]]][x] }] \
+  } } } \
+]
+
+ZIP = FIX[-> r { -> xs { -> ys { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [EMPTY_LIST] \
+    [IF_THEN_ELSE[IS_EMPTY[ys]] \
+      [EMPTY_LIST] \
+      [-> x { LIST_ELEMENT[PAIR[HEAD[xs]][HEAD[ys]]][r[TAIL[xs]][TAIL[ys]]][x] }]] \
+  } } } \
+]
+
+ZIP_WITH = FIX[-> r { -> f { -> xs { -> ys { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [EMPTY_LIST] \
+    [IF_THEN_ELSE[IS_EMPTY[ys]] \
+      [EMPTY_LIST] \
+      [-> x { LIST_ELEMENT[f[HEAD[xs]][HEAD[ys]]][r[f][TAIL[xs]][TAIL[ys]]][x] }]] \
+  } } } } \
+]
+
+INSERT = FIX[-> r { -> n { -> xs { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [LIST_ELEMENT[n][EMPTY_LIST]] \
+    [IF_THEN_ELSE[GREATER_THAN[n][HEAD[xs]]] \
+      [-> x { LIST_ELEMENT[HEAD[xs]][r[n][TAIL[xs]]][x] }] \
+      [LIST_ELEMENT[n][xs]]] \
+  } } } \
+]
+
+SORT = FOLD[INSERT][EMPTY_LIST]
+
+# streams
+
+ZEROS = FIX[-> r { LIST_ELEMENT[ZERO][r] }] 
+
+REPEAT = -> x { FIX[-> r { LIST_ELEMENT[x][r] }] }
+
+# functional structures (list implementations)
+
+# monoid
+
+MEMPTY = EMPTY_LIST
+
+MAPPEND = APPEND
+
+# functor
+
+FMAP = MAP
+
+# applicative
+
+PURE = -> x { LIST_ELEMENT[x][EMPTY_LIST] }
+
+AP = FIX[-> r { -> fs { -> xs { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [EMPTY_LIST] \
+    [IF_THEN_ELSE[IS_EMPTY[fs]][EMPTY_LIST] \
+      [-> x { MAPPEND[MAP[HEAD[fs]][xs]][r[TAIL[fs]][xs]][x] }]] \
+  } } } \
+]
+
+AP_ZIP_LIST = -> fs { -> xs { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [EMPTY_LIST] \
+    [IF_THEN_ELSE[IS_EMPTY[fs]][EMPTY_LIST] \
+      [ZIP_WITH[ID][fs][xs]]] \
+  } }
+
+# monad
+
+RETURN = PURE
+
+BIND = FIX[-> r { -> xs { -> f { \
+  IF_THEN_ELSE[IS_EMPTY[xs]] \
+    [EMPTY_LIST] \
+    [-> x { MAPPEND[f[HEAD[xs]]][r[TAIL[xs]][f]][x] }] \
+  } } } \
+]
+
 # factorial
 
 F = -> f { -> n { IS_ZERO[n][ONE][-> x { MULT[n][f[PRED[n]]][x] }] } }
@@ -202,6 +297,12 @@ FACT = FIX[-> r { -> n { \
     [-> x { MULT[n][r[PRED[n]]][x] }] \
   } } \
 ]
+
+AND_EQUALS_TWO = COMPOSE[AND][EQUALS[TWO]]
+
+ALL_TWOS = FOLD[AND_EQUALS_TWO][TRUE]
+
+
 
 # fibonacci
 
