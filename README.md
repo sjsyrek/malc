@@ -48,7 +48,7 @@ OR = λx. λy. x TRUE y
 
 NOT = λx. x FALSE TRUE
 
-XOR = λx. λy. NOT(AND x y)
+XOR = λx. λy. x (NOT y) y
 ```
 
 Boolean combinators.

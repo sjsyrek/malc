@@ -1,3 +1,9 @@
+
+import sys
+import unittest
+
+sys.setrecursionlimit(10000)
+
 # malc - make a lambda calculus
 # Python 3
 # Steven Syrek
@@ -20,7 +26,7 @@ OR = lambda x: lambda y: x(TRUE)(y)
 
 NOT = lambda x: x(FALSE)(TRUE)
 
-XOR = lambda x: lambda y: AND(OR(x)(y))(NOT(AND(x)(y)))
+XOR = lambda x: lambda y: x(NOT(y))(y)
 
 # branching
 
@@ -153,6 +159,10 @@ FILTER = lambda p: FOLD(lambda x: lambda xs: \
         (LIST_ELEMENT(x)(xs)) \
         (xs)) \
     (EMPTY_LIST)
+
+# folds
+
+# implement SUM and stuff
 
 # other list functions
 
@@ -396,3 +406,103 @@ from_string = lambda str: EMPTY_LIST if len(str) == 0 else LIST_ELEMENT(from_int
 to_fizzbuzz = lambda fb: list(map(lambda x: to_int(x) if to_string(x) == "" else to_string(x), to_list(fb)))
 
 # test_fizzbuzz = to_fizzbuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN))) == [1,2,"Fizz",4,"Buzz","Fizz",7,8,"Fizz","Buzz",11,"Fizz",13,14,"FizzBuzz"]
+
+
+class Testing(unittest.TestCase):
+    p = PAIR(ONE)(TWO)
+    l = RANGE(ONE)(THREE)
+    
+    def test_combinators(self):
+        self.assertEqual(ID(1), 1)
+        self.assertEqual(COMPOSE(ID)(ID)(1), ID(ID(1)))
+        
+    def test_booleans(self):
+        self.assertEqual(TRUE(1)(0), 1)
+        self.assertEqual(FALSE(1)(0), 0)
+        self.assertEqual(to_bool(AND(FALSE)(TRUE)), False)
+        self.assertEqual(to_bool(OR(FALSE)(TRUE)), True)
+        self.assertEqual(to_bool(NOT(TRUE)), False)
+        self.assertEqual(to_bool(XOR(TRUE)(TRUE)), False)
+        self.assertEqual(to_bool(IF_THEN_ELSE(IS_ZERO(ZERO))(TRUE)(FALSE)), True)
+        
+    def test_numeric(self):
+        self.assertEqual(to_int(ZERO), 0)
+        self.assertEqual(to_int(ONE), 1)
+        self.assertEqual(to_int(TWO), 2)
+        self.assertEqual(to_int(THREE), 3)
+        self.assertEqual(to_int(SUCC(ONE)), 2)
+        self.assertEqual(to_int(PRED(ONE)), 0)
+        self.assertEqual(to_int(PLUS(TWO)(TWO)), 4)
+        self.assertEqual(to_int(MINUS(TWO)(ONE)), 1)
+        self.assertEqual(to_int(MULT(TWO)(THREE)), 6)
+        self.assertEqual(to_int(EXP(TWO)(THREE)), 8)
+        
+    def test_bool_functions(self):
+        self.assertEqual(to_bool(IS_ZERO(ZERO)), True)
+        self.assertEqual(to_bool(IS_ZERO(THREE)), False)
+        self.assertEqual(to_bool(LESS_THAN_OR_EQUAL(ZERO)(ZERO)), True)
+        self.assertEqual(to_bool(LESS_THAN_OR_EQUAL(ONE)(ZERO)), False)
+        self.assertEqual(to_bool(LESS_THAN(ZERO)(ONE)), True)
+        self.assertEqual(to_bool(LESS_THAN(ZERO)(ZERO)), False)
+        self.assertEqual(to_bool(EQUALS(ONE)(ONE)), True)
+        self.assertEqual(to_bool(GREATER_THAN(ZERO)(ZERO)), False)
+        self.assertEqual(to_bool(GREATER_THAN(ONE)(ZERO)), True)
+        self.assertEqual(to_bool(GREATER_THAN_OR_EQUAL(ZERO)(ZERO)), True)
+        self.assertEqual(to_bool(GREATER_THAN_OR_EQUAL(ONE)(ZERO)), True)
+        self.assertEqual(to_bool(GREATER_THAN_OR_EQUAL(ZERO)(ONE)), False)
+        self.assertEqual(to_bool(EVEN(TWO)), True)
+        self.assertEqual(to_bool(ODD(ONE)), True)
+        self.assertEqual(to_bool(ODD(TWO)), False)
+        
+    def test_numeric_functions(self):
+        self.assertEqual(to_int(MAX(ONE)(TWO)), 2)
+        self.assertEqual(to_int(MIN(ONE)(TWO)), 1)
+        self.assertEqual(to_int(MOD(FIVE)(TWO)), 1)
+        self.assertEqual(to_int(DIV(FOUR)(TWO)), 2)
+        
+    def test_data_structures(self):
+        self.assertEqual(to_int(FIRST(Testing.p)), 1)
+        self.assertEqual(to_int(SECOND(Testing.p)), 2)
+        self.assertEqual(to_bool(AND(FIRST(EMPTY_LIST))(SECOND(EMPTY_LIST))), True)
+        self.assertEqual(to_bool(AND(IS_EMPTY(EMPTY_LIST))(NOT(IS_EMPTY(Testing.l)))), True)
+        self.assertEqual(to_int(HEAD(Testing.l)), 1)
+        self.assertEqual(to_list_int(TAIL(Testing.l)), [2, 3])
+        self.assertEqual(to_int(FOLD(PLUS)(ZERO)(Testing.l)), 6)
+        self.assertEqual(to_list_int(MAP(PLUS(ONE))(Testing.l)), [2, 3, 4])
+        self.assertEqual(to_int(HEAD(FILTER(EVEN)(Testing.l))), 2)
+        self.assertEqual(to_list_int(Testing.l), [1, 2, 3])
+        self.assertEqual(to_int(INDEX(Testing.l)(ZERO)), 1)
+        self.assertEqual(to_list_int(PUSH(FOUR)(Testing.l)), [1, 2, 3, 4])
+        self.assertEqual(to_list_int(APPEND(Testing.l)(Testing.l)), [1, 2, 3, 1, 2, 3])
+        self.assertEqual(to_int(LENGTH(Testing.l)), 3)
+        self.assertEqual(to_list_int(REVERSE(Testing.l)), [3, 2, 1])
+        self.assertEqual(to_list_int(TAKE(TWO)(Testing.l)), [1, 2])
+        self.assertEqual(list(map(lambda x: to_pair_int(x), to_list(ZIP(Testing.l)(Testing.l)))), [{'fst': 1, 'snd': 1}, {'fst': 2, 'snd': 2}, {'fst': 3, 'snd': 3}])
+        self.assertEqual(to_list_int(ZIP_WITH(PLUS)(Testing.l)(REVERSE(Testing.l))), [4, 4, 4])
+        self.assertEqual(to_list_int(INSERT(ZERO)(Testing.l)), [0, 1, 2, 3])
+        self.assertEqual(to_list_int(SORT(REVERSE(Testing.l))), to_list_int(Testing.l))
+        self.assertEqual(to_list_int(TAKE(THREE)(ZEROS)), [0, 0, 0])
+        self.assertEqual(to_list_int(TAKE(THREE)(REPEAT(ONE))), [1, 1, 1])
+    def test_higher_order(self):
+        self.assertEqual(0, 0) # not implemented as of yet, SUM, FOLDS, etc.
+    
+    def test_applicative(self):
+        self.assertEqual(to_list_int(PURE(ONE))[0], 1)
+        self.assertEqual(to_list_int(AP(MAP(PLUS)(Testing.l))(Testing.l)), [2, 3, 4, 3, 4, 5, 4, 5, 6])
+        self.assertEqual(to_list_int(AP_ZIP_LIST(MAP(PLUS)(Testing.l))(REVERSE(Testing.l))), [4, 4, 4])
+#         self.assertEqual(to_list_int(BIND(Testing.l)(RETURN(lambda x : RETURN(PLUS(x)(ONE))))), [2, 3, 4])
+        
+    def test_factorial(self):
+        self.assertEqual(to_int(FACT(THREE)), 6)
+        self.assertEqual(to_int(FACT_EXP(THREE)), 6)
+#         self.assertEqual(to_bool(FACT_CHECK), True)
+
+    def test_fibonacci(self):
+        self.assertEqual(to_int(FIB(SIX)), 8)
+        self.assertEqual(to_int(FIB_EXP(SIX)), 8)
+        
+    def test_fizzbuzz(self):
+        self.assertEqual(to_fizzbuzz(FIZZBUZZFUNC(RANGE(ONE)(FIFTEEN))), [1,2,"Fizz",4,"Buzz","Fizz",7,8,"Fizz","Buzz",11,"Fizz",13,14,"FizzBuzz"])
+        self.assertEqual(to_fizzbuzz(FIZZBUZZFUNC_EXP(RANGE(ONE)(FIFTEEN))), [1,2,"Fizz",4,"Buzz","Fizz",7,8,"Fizz","Buzz",11,"Fizz",13,14,"FizzBuzz"])
+
+unittest.main(argv=['first-arg-is-ignored'], exit=False)
