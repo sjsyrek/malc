@@ -1,5 +1,7 @@
 # JavaScript ES2015
 
+**Now available as an [npm package](https://github.com/sjsyrek/malcjs)**
+
 Arrow functions make this nicer.
 
 Load the `malc.html` page into your browser and test the functions in your JavaScript console (which should report that the included tests have passed). Or use [node](https://nodejs.org/en/). For the separate FizzBuzz implementation, load `fizzbuzz.html`. Loading both at once may cause browser stack death.
