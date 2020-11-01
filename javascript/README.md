@@ -1,6 +1,6 @@
 # JavaScript ES2015
 
-**Now available as an [npm package](https://github.com/sjsyrek/malcjs)**
+**Now available as an [npm package](https://github.com/sjsyrek/malcjs).**
 
 Arrow functions make this nicer.
 
